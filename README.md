@@ -22,7 +22,14 @@ PDK (Process Design Kit) = A set of data files and documents which serves as the
  - Placement = There are two steps, first is global placement which is the general optimal positons for cells and might not be legal. Next is detailed placement which is the actual legal placements of the cells.
  - Clock tree synthesis = clock distribution to all flip flops and is usually a tree (H-tree, X-tree ... )
  - Routing = Use horizontal and vertical wires to connect cells together. The router uses PDK information (thickness, pitch, width,vias) for each metal layer to do the routing. The Sky130 defines 6 routing layers. It doe global routing and detailed routing.
- - Verification before sign-off = Involves physical verification like DRC and LVS and timing verification. Design Rule Checking or DRC ensures final layout honors all design rules and Layout versus Schematic or LVS ensures final layout matches the gate level netlist from synthesis phase. Timing verification ensures timing constraints are met.
+ - Verification before sign-off = Involves physical verification like DRC and LVS and timing verification. Design Rule Checking or DRC ensures final layout honors all design rules and Layout versus Schematic or LVS ensures final layout matches the gate level netlist from synthesis phase. Timing verification ensures timing constraints are met.  
  The final layout is in GDSII file format.
  
- OpenLANE = Opensourced ASIC developemnt flow rerference. It is tuned epecially for Sky130 PDK
+ [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane) = Opensourced ASIC developemnt flow rerference. It is tuned epecially for Sky130 PDK. It is recommended to read the OpenLANE documentation before going forward.
+ ![image](https://user-images.githubusercontent.com/87559347/182759711-6b9352ec-7652-4589-af31-53a409eb2830.png)
+
+### Notable details are:  
+Yosys is used to convert the HDL to gate level netlist using generic components. The ABC script is then used to map the generic components to the standard cell library of the PDK. These ABC scripts is used to make various synthesis strategies (using the Synthesis Exploration) which can optimize the design either with least area or best timing.  
+The OpenROAD application automates Place and Route
+
+ 
