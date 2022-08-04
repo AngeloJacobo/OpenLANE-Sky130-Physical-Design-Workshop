@@ -36,10 +36,14 @@ PDK (Process Design Kit) = A set of data files and documents which serves as the
 - The Logic Equivalency CHceking (LEC) is used to compare the resulting netlist after optimization of place and route to the gate level netlist from synthesis phase
 Antenna Rules Violation = long wire segments will act as antennna and will accumulate charges, this might damage the connected transistor gates. Solution is to eithre use bridging or antenna diode insertion to leak away the charges  
 
-### Notable directories:
+### Notable Directories:
 
 ``` 
-├── openlane             -> directory where the tool can be invoked
+├── openlane             -> directory where the tool can be invoked (run docker first)
+│   ├── designs          -> All designs must be extracted from this folder
+│   │   │   ├── picorv32a -> Design used as case study for this workshop
+│   |   |   ├── ...
+|   |   ├── ...
 ├── pdks                 -> contains pdk related files 
 │   ├── skywater-pdk     -> all Skywater 130nm PDKs
 │   ├── open-pdks        -> contains scripts that makes the PDK (which is normally just compatible to commercial tools) to work with the opensource EDA tool
@@ -47,3 +51,22 @@ Antenna Rules Violation = long wire segments will act as antennna and will accum
 │   │   │  ├── libs.ref  -> files specific to node process (timing lib, cell lef, tech lef) for example is `sky130_fd_sc_hd` (Sky130nm Foundry Standard Cell High Density)  
 │   │   │  ├── libs.tech -> files specific for the tool (klayout,netgenmagic...) 
 ```
+
+Inside a specfic design folder contains a `config.tcl` which overrides the default settings on OpenLANE. These configurations are specific to a design (e.g. clock period, clock port, verilog files...). The priority level for the OpenLANE settings:
+1. Default values
+2. config.tcl
+3. sky130_xxxxx_config.tcl
+
+Steps:
+1. Run OpenLANE. Below are the commands used in sequence:
+ - `$ docker` = Open the docker platform inside the `openlane/`
+ - `% flow.tcl -interactive` = run script for automating the whole RTL to GDSII flow but in `-interactive` mode
+ - `% package require openlane 0.9` == retrives all dependecies for running v0.9 of OpenLANE  
+ 
+ ![image](https://user-images.githubusercontent.com/87559347/182833010-c5b32449-bfa1-42d0-8433-9edfdefbf1f6.png)
+
+ 
+2. Design Setup Stage. Setup the filesystem where the OpenLANE tools for each step can retrieve the needed input files. This merges the cell lef files `.lef` and technology lef files `.tlef`  
+
+![image](https://user-images.githubusercontent.com/87559347/182833339-f117de40-af1f-4607-9c47-81b3ae5f7b7e.png)
+
