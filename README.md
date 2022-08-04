@@ -57,7 +57,9 @@ Inside a specfic design folder contains a `config.tcl` which overrides the defau
 2. config.tcl
 3. sky130_xxxxx_config.tcl
 
-Steps:
+## #Task for the Lab: Find the flipflop ratio for the design `picorv32a`. This is the ratio of the number of lflip flops to the toal number of cells
+
+## Steps:
 1. Run OpenLANE. Below are the commands used in sequence:
  - `$ docker` = Open the docker platform inside the `openlane/`
  - `% flow.tcl -interactive` = run script for automating the whole RTL to GDSII flow but in `-interactive` mode
@@ -66,7 +68,15 @@ Steps:
  ![image](https://user-images.githubusercontent.com/87559347/182833010-c5b32449-bfa1-42d0-8433-9edfdefbf1f6.png)
 
  
-2. Design Setup Stage. Setup the filesystem where the OpenLANE tools for each step can retrieve the needed input files. This merges the cell lef files `.lef` and technology lef files `.tlef`  
+2. Design Setup Stage.Command used is:
+ - `% prep -design picorv32a` = Setup the filesystem where the OpenLANE tools can dump the outputs. This merges the cell lef files `.lef` and technology lef files `.tlef` producing `merged.lef`. This also creates a `run/` folder inside the specific design directory which contains the command log files, results, and the reports dump by each tools.
+ 
 
 ![image](https://user-images.githubusercontent.com/87559347/182833339-f117de40-af1f-4607-9c47-81b3ae5f7b7e.png)
 
+3. Run synthesis. Command used is:
+ - `% run_synthesis` = Run yosys synthesis and the ABC scripts.  
+ 
+![image](https://user-images.githubusercontent.com/87559347/182847715-b0da0f41-b444-4036-9ca3-c5335bfd42cf.png)
+
+As we can see above, 
