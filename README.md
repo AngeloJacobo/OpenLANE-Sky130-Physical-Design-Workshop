@@ -75,13 +75,13 @@ Inside a specfic design folder contains a `config.tcl` which overrides the defau
 ![image](https://user-images.githubusercontent.com/87559347/182833339-f117de40-af1f-4607-9c47-81b3ae5f7b7e.png)
 
 3. Run synthesis. Command used is:
- - `% run_synthesis` = Run yosys synthesis, ABC scripts, and STA.  
+ - `% run_synthesis` = Run yosys synthesis, ABC scripts, and OpenSTA.  
  
 ![image](https://user-images.githubusercontent.com/87559347/182847715-b0da0f41-b444-4036-9ca3-c5335bfd42cf.png)
 
 The flipflop ratio percentage (number of flip flops)/(total number of cells) is 1613/14876 = 10.843%
 
-After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32a_synthesis.v` which is the mapping of the netlist to standard cell library using ABC. The `runs/[date]/reports/synthesis` will contain synthesis statistic reports and static timing analysis reports. The `runs/[date]/synthesis/logs` contains terminal output dumps.
+After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32a_synthesis.v` which is the mapping of the netlist to standard cell library using ABC. The `runs/[date]/reports/synthesis` will contain synthesis statistic reports and static timing analysis reports. The `runs/[date]/synthesis/logs` contains log files for the terminal output dumps for running yosys and OpenSTA.
 
 ![image](https://user-images.githubusercontent.com/87559347/182874085-12a7d8b8-d095-4a18-b9ab-101050473046.png)
 
