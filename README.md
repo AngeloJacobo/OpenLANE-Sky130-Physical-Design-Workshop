@@ -87,6 +87,8 @@ After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32
 ![image](https://user-images.githubusercontent.com/87559347/182874085-12a7d8b8-d095-4a18-b9ab-101050473046.png)
 
 ## Day 2
+## Floor Plan General Steps:
+
 #### First step of Physical design flow is to find height and width of core and die.   
 Core is where the logic blocks are placed and this seats at the center of the die. The width and height depends on dimensions of each standard cells on the netlist. Utilization factor is (area occupied by netlist)/(total area of the core). In practical scenario, utilization factor is 0.5 to 0.6. This is space occupied by netlist only, the remaining space is for routing and more additional cells. Aspect ratio is (height)/(width) of core, so only aspect ratio of 1 will produce a square core shape.
 
@@ -106,3 +108,35 @@ The input and output ports are placed on the space between the core and the die.
 
 #### Sixt step is Logical Cell Placement Blockage
 This makes sure that the automated placement and routing tool does not place any cell on the pin locations of the die.
+
+OPENLANE
+Notable details:
+Standard cells are not placed on floorplan stage, it is done on Placement stage. Macros or preplaced cells are placed on floorplan stage. Before running floorplan stage, the configuration variables or switches must be configured first. The configuration variables are on `openlane/configuration`:
+```
+.
+├── README.md      
+├── checkers.tcl
+├── cts.tcl
+├── floorplan.tcl  
+├── general.tcl
+├── lvs.tcl
+├── placement.tcl
+├── routing.tcl
+└── synthesis.tcl 
+
+```
+The  `README.md` describes all configuration variables for every stage and the tcl files contain the default OpenLANE settings. All configurations accepted by the current run is on `openlane/designs/picorv32a/runs/config.tcl`. This may come either from (with priorirty order):
+1. PDK specific configuration inside the design folder
+2. `config.tcl` inside the design folder
+3. System default settings inside `openlane/configurations`
+
+The `runs/[date]/results/floorplan/picorv32a.floorplan.def` is a design exchange format, containing the die area and positions. 
+```
+...........
+DESIGN picorv32a ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 660685 671405 ) ;
+............
+```
+The die area here is in database units and 1 micron is equivalent to 1000 database units. Thus (660685/1000)microns\*(671405/1000)microns = 0.443587 micrometer squared.
+
