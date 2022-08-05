@@ -138,7 +138,18 @@ UNITS DISTANCE MICRONS 1000 ;
 DIEAREA ( 0 0 ) ( 660685 671405 ) ;
 ............
 ```
-The die area here is in database units and 1 micron is equivalent to 1000 database units. Thus (660685/1000)microns\*(671405/1000)microns = 0.443587 micrometer squared. To see actual layout after floorplan, open def file using `magic`
+The die area here is in database units and 1 micron is equivalent to 1000 database units. Thus (660685/1000)microns\*(671405/1000)microns = 0.443587 micrometer squared. To see actual layout after floorplan, open def file using `magic`:
+```
+magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def
+```
+![image](https://user-images.githubusercontent.com/87559347/183096952-4c64179b-8b62-4365-8338-c2046ad78721.png)
 
-magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../merged.lef def read picorv32a.floorplan.def
+Point the cursor to a cell then press "S" to select it. Type "what" in `tkcon` to display information of selected object. These objects might be IO pin, decap cell, or well taps as shown below.
+![image](https://user-images.githubusercontent.com/87559347/183100900-b3527702-5375-4a4e-ad87-194fce382128.png)
 
+
+
+
+
+
+    
