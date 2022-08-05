@@ -62,7 +62,7 @@ Inside a specfic design folder contains a `config.tcl` which overrides the defau
 ## Steps:
 1. Run OpenLANE. Below are the commands used in sequence:
  - `$ docker` = Open the docker platform inside the `openlane/`
- - `% flow.tcl -interactive` = run script for automating the whole RTL to GDSII flow but in `-interactive` mode
+ - `% flow.tcl -interactive` = run script for automating the whole RTL to GDSII flow but in step by step `-interactive` mode
  - `% package require openlane 0.9` == retrives all dependecies for running v0.9 of OpenLANE  
  
  ![image](https://user-images.githubusercontent.com/87559347/182833010-c5b32449-bfa1-42d0-8433-9edfdefbf1f6.png)
