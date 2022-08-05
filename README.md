@@ -148,7 +148,9 @@ Point the cursor to a cell then press "S" to select it. Type "what" in `tkcon` t
 ![image](https://user-images.githubusercontent.com/87559347/183100900-b3527702-5375-4a4e-ad87-194fce382128.png)
 
 
-
+### Placement and Routing
+Bind the netlist to a physical cell with real dimensions. The physical cell will come from a library that can provide multiple options for shapes, dimensions, and delay for same cells. Next is placement of those physical cells to the floorplan
+The flip flops must be placed as near as possible to the input and output pins to reduce timing delay
 
 
 
