@@ -200,7 +200,8 @@ The library cell developer must adhere to the rules given on the inputs so that 
 Timing variables for slew. This is two inverters in series, red is output of first inverter and blue is output of second inverter:
 ![image](https://user-images.githubusercontent.com/87559347/183231913-a9b3826b-5139-4bdc-b12b-3495b87cd8b9.png)
 
-Timing variables for delay. The red is input waveform and blue is output waveform of the buffer. The left side is rise delay and right side is fall delay.  
+Timing variables for propragation delay. The red is input waveform and blue is output waveform of the buffer. The left side is rise delay and right side is fall delay.  
 
 ![image](https://user-images.githubusercontent.com/87559347/183232515-fe3cef76-8a2f-475d-9a64-392fc2fda111.png)
 
+Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshdol is susually 50% and slew rate threshold is 20%.
