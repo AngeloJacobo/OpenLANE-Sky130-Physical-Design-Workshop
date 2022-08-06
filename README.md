@@ -217,5 +217,13 @@ Steps to design a CMOS inverter cell.
 
 2. SPICE deck values = W/L (0.375u/0.25u means width is 375nm and length is 250nm). PMOS should be wider in width (2x or 3x) than NMOS ideally. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)
 3. Add nodes to surround each component and name it. This will be used in SPICE to identify a componenet
+Spice deck netlist description
+![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
+### Notes:
+ - Syntax for the PMOS and NMOS descriptiom:
+     -[component name] [drainn [gate] [source] [substrate] [transistor type] W=[width] L=[length]
+ - All components are described based on nodes and its values
+ - `.op` is the start of SPICE simulation operation where Vin will be sweep from 0 to 2.5 with 0.5 steps
+ - `tsmc_025um_model.mod` is the model file containing the technological parameters for the 0.25um NMOS and PMOS
 
-![image](https://user-images.githubusercontent.com/87559347/183238662-ac9803cc-3246-430e-9172-a1ea681884a1.png)
+
