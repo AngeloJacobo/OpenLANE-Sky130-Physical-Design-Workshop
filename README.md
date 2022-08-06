@@ -167,7 +167,7 @@ In placement we are less concerned on timing but more on congestion. Placement i
  - Global Placement = placement with no legalizations and goal is to reduce wirelength. It uses Half Perimeter Wirelength (HPWL) reduction model. 
  - Detailed Placement = placement with legalization where the standard cells are placed on stadard rows, abutted, and must have no overlaps  
  
-`% run_placement` will run global placement. It displays hundreds of iterations displaying HPWL and OVFL. The algorithm is said to be converging if the overflow is decreasing. It also checks the legality. 
+In OpenLANE, un placement using `% run_placement`. This commmand is a wrapper which does global placement (performed by RePlace tool), Optimization (by Resier tool), and detailed placement (by OpenDP tool). It displays hundreds of iterations displaying HPWL and OVFL. The algorithm is said to be converging if the overflow is decreasing. It also checks the legality. 
 
 The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def.` To see actual layout after floorplan, open def file using `magic`:
 ```
@@ -205,3 +205,17 @@ Timing variables for propragation delay. The red is input waveform and blue is o
 ![image](https://user-images.githubusercontent.com/87559347/183232515-fe3cef76-8a2f-475d-9a64-392fc2fda111.png)
 
 Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshdol is susually 50% and slew rate threshold is 20%.
+
+## Day 3
+
+Configurations on OpenLANE canbe changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session.
+
+### We will make a sample cell (inverter) and insert it to openlane 
+
+Steps to design a CMOS inverter cell.
+1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
+
+2. SPICE deck values = W/L (0.375u/0.25u means width is 375nm and length is 250nm). PMOS should be wider in width (2x or 3x) than NMOS ideally. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)
+3. Add nodes to surround each component and name it. This will be used in SPICE to identify a componenet
+
+![image](https://user-images.githubusercontent.com/87559347/183238662-ac9803cc-3246-430e-9172-a1ea681884a1.png)
