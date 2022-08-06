@@ -189,7 +189,9 @@ A single cell needs to go through cell design flow. The inputs to make a single 
 The library cell developer must adhere to the rules given on the inputs so that when the cell is used on a real design, there will be no errors. Next is design the library cell:
 1. Design the circuit function (Output: circuit design language (CDL))
 2. Model the pmos and nmos that meets input library requirement
-3. Layout the design using Euler's path and sticky diagram to produce best area. The outputs are:
+3. Layout the design using Euler's path and sticky diagram to produce best area. This can be done on `magic` layout tool.The outputs are:
    - GDSII (layout file)
    - LEF (defines the width and height of cell)
-   - extract spice netlist .cir (parasitics info: resistance, capacitance)
+   - extract spice netlist .cir (parasitics of each element of cell: resistance, capacitance)
+ Afte deisgn is characterization where output are timing, noise, and power characterization
+
