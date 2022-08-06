@@ -228,7 +228,14 @@ Spice deck netlist description
 steps to simulate in SPICE:
 ```
 source [filename].cir
+run
 setplot -> view plots available
 dc1 -> DC transfer characteristic
 plot out vs in -> plot out vs in
 ```
+CMOS robustness depends on:
+1. Switching threshold = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V)
+2. Propagation delay
+3. DAY 3 SK1 L4
+
+Open magfile
