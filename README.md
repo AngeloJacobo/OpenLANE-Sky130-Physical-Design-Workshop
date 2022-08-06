@@ -86,6 +86,8 @@ After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32
 
 ![image](https://user-images.githubusercontent.com/87559347/182874085-12a7d8b8-d095-4a18-b9ab-101050473046.png)
 
+
+
 ## Day 2
 ## Floor Plan General Steps:
 
@@ -130,7 +132,7 @@ The  `README.md` describes all configuration variables for every stage and the t
 2. `config.tcl` inside the design folder
 3. System default settings inside `openlane/configurations`
 
-The `runs/[date]/results/floorplan/picorv32a.floorplan.def` is a design exchange format, containing the die area and positions. 
+Run floorplan on Openlane using `% run floor_plan`. The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def` which is a design exchange format, containing the die area and positions. 
 ```
 ...........
 DESIGN picorv32a ;
@@ -142,16 +144,40 @@ The die area here is in database units and 1 micron is equivalent to 1000 databa
 ```
 magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def
 ```
-![image](https://user-images.githubusercontent.com/87559347/183096952-4c64179b-8b62-4365-8338-c2046ad78721.png)
+![image](https://user-images.githubusercontent.com/87559347/183226953-8bf8b067-5a70-43a3-9b92-f39caaf02a4a.png)
 
-Point the cursor to a cell then press "S" to select it. Type "what" in `tkcon` to display information of selected object. These objects might be IO pin, decap cell, or well taps as shown below.
+
+To center the view, press "s" to select whole die then press "v" to center the view. Point the cursor to a cell then press "s" to select it, zoom into it by pressing 'z". Type "what" in `tkcon` to display information of selected object. These objects might be IO pin, decap cell, or well taps as shown below.
 ![image](https://user-images.githubusercontent.com/87559347/183100900-b3527702-5375-4a4e-ad87-194fce382128.png)
 
 
 ### Placement and Routing
-Bind the netlist to a physical cell with real dimensions. The physical cell will come from a library that can provide multiple options for shapes, dimensions, and delay for same cells. Next is placement of those physical cells to the floorplan
-The flip flops must be placed as near as possible to the input and output pins to reduce timing delay
+1. Bind the netlist to a physical cell with real dimensions. The physical cell will come from a library that can provide multiple options for shapes, dimensions, and delay for same cells. 
+2. Next is placement of those physical cells to the floorplan. The flip flops must be placed as near as possible to the input and output pins to reduce timing delay
+
+3.Optimize placement to maintain signal integrity. This is where we estimate wirelength and capciatance (C=EA/d) and based on that insert repeaters/buffers. The wirelength will form a resistnace which will cause unnecessary voltage drop and a capacitance which will cause a slew rate that might not be permissible for fast current switching of logic gates. The solution to reduce resistance and capaciatnce is to insert buffers for long routes that will act as intermediary and separate a single long wire to multilple ones.
+ Sometime we also do abutment where logic cells are placed very close to each other (almost zero delay) if it has to run at high frequency (2GHz). Crisscrossing of routes is a normal condition for PnR since we can use separate metal layer (using vias) for crisscrossed path.
+
+After placement optimizization, We will setup timing analysis using idle clock (zero delay for wires) considering we have not yet done CTS
+![image](https://user-images.githubusercontent.com/87559347/183224947-67a29c54-9a18-45a4-bbd1-9132bcebc304.png)
+
+The goal of placement is not yet on timing but on congestion. 
+### LAB
+In placement we are less concerned on timing but more on congestion. Placement is done on two stages:
+ - Global Placement = placement with no legalizations and goal is to reduce wirelength. It uses Half Perimeter Wirelength (HPWL) reduction model. 
+ - Detailed Placement = placement with legalization where the standard cells are placed on stadard rows, abutted, and must have no overlaps  
+ 
+`% run_placement` will run global placement. It displays hundreds of iterations displaying HPWL and OVFL. The algorithm is said to be converging if the overflow is decreasing. It also checks the legality. 
+
+The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def.` To see actual layout after floorplan, open def file using `magic`:
+```
+magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def
+```
+![image](https://user-images.githubusercontent.com/87559347/183227636-cc5b24b3-5b05-469f-9af1-de89b3c7ed1e.png)  
+
+Power Distibution Network (PDN) is normally created on floorplan stage but on OpenLANE, PDN is done on post-CTS (before routing).  
 
 
-
+### Library CHarcterization
+Of all RTL-to-GDSII stages, one common thing that the EDA tool always need is data from the library of gates which characterizes and model all cells. It also checks the legality
     
