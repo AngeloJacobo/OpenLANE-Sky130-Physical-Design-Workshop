@@ -179,5 +179,17 @@ Power Distibution Network (PDN) is normally created on floorplan stage but on Op
 
 
 ### Library CHarcterization
-Of all RTL-to-GDSII stages, one common thing that the EDA tool always need is data from the library of gates which characterizes and model all cells. It also checks the legality
-    
+Of all RTL-to-GDSII stages, one common thing that the EDA tool always need is data from the library of gates which keeps all standards cells (and, or, buffer gates,...), macros, IPs, decaps, etc. Same cells might have different flavors inside the library (different sizes, delays, threshold voltage). Bigger cell sizes means bigger drive strength to drive longer and thicker wires. Bigger threshold voltage (due to bigger size) will take more time to switch(slower clock) than those with smaller threshold voltage.  
+
+A single cell needs to go through cell design flow. The inputs to make a single cell comes from the foundry Process Design Kits:
+ - DRC & LVS Rules = tech files and poly subtrate paramters (CUSTOME LAYOUT COURSE)
+ - SPICE Models  = Threshold, linear regions, saturation region equations with added foundry parameters. Including NMOS and PMOS parameteres (Ciruit Deisgn and Spice simulation Course)
+ - User defined Spec = Cell height (separation between power and ground rail), Cell width (depends on drive strength), supply voltage, metal layer requirement (which metal layer the cell needs to work)
+
+The library cell developer must adhere to the rules given on the inputs so that when the cell is used on a real design, there will be no errors. Next is design the library cell:
+1. Design the circuit function (Output: circuit design language (CDL))
+2. Model the pmos and nmos that meets input library requirement
+3. Layout the design using Euler's path and sticky diagram to produce best area. The outputs are:
+   - GDSII (layout file)
+   - LEF (defines the width and height of cell)
+   - extract spice netlist .cir (parasitics info: resistance, capacitance)
