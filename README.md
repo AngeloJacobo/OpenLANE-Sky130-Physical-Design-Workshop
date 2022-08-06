@@ -193,5 +193,14 @@ The library cell developer must adhere to the rules given on the inputs so that 
    - GDSII (layout file)
    - LEF (defines the width and height of cell)
    - extract spice netlist .cir (parasitics of each element of cell: resistance, capacitance)
- Afte deisgn is characterization where output are timing, noise, and power characterization
+ Afte deisgn is characterization using GUNA software, where the outputs are timing, noise, and power characterization.
+ .
+ ### Timing Characterization (timing .lib)
+ 
+Timing variables for slew. This is two inverters in series, red is output of first inverter and blue is output of second inverter:
+![image](https://user-images.githubusercontent.com/87559347/183231913-a9b3826b-5139-4bdc-b12b-3495b87cd8b9.png)
+
+Timing variables for delay. The red is input waveform and blue is output waveform of the buffer. The left side is rise delay and right side is fall delay.  
+
+![image](https://user-images.githubusercontent.com/87559347/183232515-fe3cef76-8a2f-475d-9a64-392fc2fda111.png)
 
