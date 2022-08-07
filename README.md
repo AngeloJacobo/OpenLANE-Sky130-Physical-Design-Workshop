@@ -246,3 +246,37 @@ CMOS robustness depends on:
 3. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.
 ![image](https://user-images.githubusercontent.com/87559347/183270366-f5a70661-b0d3-4b4e-b72d-5831b6ff6da3.png)
 
+
+```
+** SPICE3 file created from sky130_inv.ext - technology: sky130A
+
+.option scale=0.01u
+.include ./libs/nshort.lib
+.include ./libs/pshort.lib
+
+//.subckt sky130_inv A Y VPWR VGND
+
+M0 Y A VGND VGND nshort_model.0 ad=0 pd=0 as=0 ps=0 w=35 l=23
+M1 Y A VPWR VPWR pshort_model.0 ad=0 pd=0 as=0 ps=0 w=37 l=23
+VDD VPWR 0 3.3V
+VSS VGND 0 0V
+Va A VGND PULSE(0V 3.3V 0 0.1n 0.1n 2ns 4ns)
+C0 Y A 0.05fF
+C1 VPWR A 0.07fF
+C2 Y VPWR 0.11fF
+C3 Y VGND 2fF
+C4 VPWR VGND 0.59fF
+//.ends
+.tran 1n 20ns
+.control
+run
+.endc
+.end
+```
+Open the spice file by typing `ngspice sky130A_inv.spice`. Generate a graph using `plot y vs time a` :
+![image](https://user-images.githubusercontent.com/87559347/183271057-ef99f8f2-5c76-49ac-a4a4-d425a41f6cf5.png)
+
+
+
+References:
+http://opencircuitdesign.com/xcircuit/index.html
