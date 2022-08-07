@@ -379,7 +379,23 @@ Today we will do generation of power distribution network. After running `gen_pd
 ![image](https://user-images.githubusercontent.com/87559347/183293313-adc46bad-0e2e-4bcf-a2fb-2e2e5b6a43b7.png)
 
 
-Now, we will finally do the routing, simply run `run_routing`. 9:30PM
+Now, we will finally do the routing, simply run `run_routing`. After approximately 15 minutes, the output is:
+![image](https://user-images.githubusercontent.com/87559347/183294065-92c9541d-e300-4e83-ae4e-bdd3ce252af4.png)
+
+Now if we go to`openlane/designs/picorv32a/runs/07-08_08-07/results/routing`, we will see the following files:  
+
+![image](https://user-images.githubusercontent.com/87559347/183294232-ec494cb7-d05d-4476-90e2-d88968574d3f.png)
+
+Notice how the def file is named simply as `picrov32a`. This is because this is the final def file in the whole RTL2GDSII flow. Let us open that def read at magic using:
+```
+magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.def
+```
+![image](https://user-images.githubusercontent.com/87559347/183294391-13c987c5-33fa-4761-ba82-396c12749aab.png)
+
+Zooming in:
+![image](https://user-images.githubusercontent.com/87559347/183294992-8d197684-99e7-42d7-b10f-9105cb5b1761.png)
+
+### Congratulations!
 
 References:
 http://opencircuitdesign.com/xcircuit/index.html
