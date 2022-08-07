@@ -236,6 +236,13 @@ plot out vs in -> plot out vs in
 CMOS robustness depends on:
 1. Switching threshold = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V)
 2. Propagation delay
-3. DAY 3 SK1 L4
 
-Open magfile
+## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)
+
+1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:
+![image](https://user-images.githubusercontent.com/87559347/183270193-c3e58fcd-951a-4d29-8856-921de11e7903.png)
+
+2. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
+3. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.
+![image](https://user-images.githubusercontent.com/87559347/183270366-f5a70661-b0d3-4b4e-b72d-5831b6ff6da3.png)
+
