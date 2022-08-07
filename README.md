@@ -286,6 +286,9 @@ Below, we can see that the requirement is satisfied:
 
 ![image](https://user-images.githubusercontent.com/87559347/183273195-485b64e0-fbb4-4c2b-85bf-6e578f7cc5df.png)
 
+Next, we will extract the lef file. Type `lef write` on the tcon terminal. It will generate a lef file with same name as the magfile: `sky130_inv.lef`. Looking inside the lef file is:
+![image](https://user-images.githubusercontent.com/87559347/183273517-743f4b0a-cbe7-47f0-a473-74d105d878b2.png)
+
 
 
 References:
