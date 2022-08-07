@@ -316,6 +316,28 @@ add_lefs -src $lefs
 Below is the statistic report, and as we can see that `sky130_vsdinv` is really used on the design!
 ![image](https://user-images.githubusercontent.com/87559347/183275187-20f03e48-1790-4d37-b463-f58726dacc9d.png)
 
+However, notice that we are failing timing significantly,
+![image](https://user-images.githubusercontent.com/87559347/183279413-1f9f4512-cb41-4e90-a611-19bea86ff6f0.png)
+
+Let us change some variables to minimize the negative slack. Use `echo $::env(SYNTH_STRATEGY) to view the current variables. The following are changed:
+
+### Delay tables are used to find delay of each cell. 
+In order to avoid large skew (signal arrives at different point in time), buffers on the same level must have same capacitive load to ensure same timing delay or latency on the same level. Same level buffers must also be the same size (since different buffer sizes pertains to different RC constant thus different delay and delay table).
+```
+echo $::env(SYNTH_STRATEGY)
+AREA 0
+set ::env(SYNTH_STRATEGY) "DELAY 0"
+echo $::env(SYNTH_BUFFERING)
+1
+echo $::env(SYNTH_SIZING)
+0
+set ::env(SYNTH_SIZING) 1
+```
+Below is the area and also the negative slack. The area becomes bigger but slack is reduced to zero!
+![image](https://user-images.githubusercontent.com/87559347/183282096-63749738-c6e8-453e-8e1e-3858db8fd567.png)
+
+Next, we do `run_floorplan` then check on magic the output layout
+
 
 References:
 http://opencircuitdesign.com/xcircuit/index.html
