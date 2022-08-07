@@ -276,6 +276,16 @@ run
 Open the spice file by typing `ngspice sky130A_inv.spice`. Generate a graph using `plot y vs time a` :
 ![image](https://user-images.githubusercontent.com/87559347/183271057-ef99f8f2-5c76-49ac-a4a4-d425a41f6cf5.png)
 
+## DAY 4
+
+First, we need to make sure that the input and output port lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch (PnR requirement). To check that, we nned to change the grid of the magic to match the real tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those information. Use grid command inside the tkon terminal to match the above needed settings:  
+
+![image](https://user-images.githubusercontent.com/87559347/183272925-3e0fb501-33e0-4cb8-9863-6c55f965b1d5.png)\
+
+Below, we can see that the requirement is satisfied:  
+
+![image](https://user-images.githubusercontent.com/87559347/183273195-485b64e0-fbb4-4c2b-85bf-6e578f7cc5df.png)
+
 
 
 References:
