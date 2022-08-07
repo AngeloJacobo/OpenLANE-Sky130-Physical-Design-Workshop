@@ -286,9 +286,35 @@ Below, we can see that the requirement is satisfied:
 
 ![image](https://user-images.githubusercontent.com/87559347/183273195-485b64e0-fbb4-4c2b-85bf-6e578f7cc5df.png)
 
-Next, we will extract the lef file. Type `lef write` on the tcon terminal. It will generate a lef file with same name as the magfile: `sky130_inv.lef`. Looking inside the lef file is:
+Next, we will extract the lef file. But before that I saved first the magfile with a new file name `save sky130_inv_new.mag`. Then type `lef write` on the tcon terminal. It will generate a lef file with same name as the magfile: `sky130_inv_new.lef`. Looking inside the lef file is:
 ![image](https://user-images.githubusercontent.com/87559347/183273517-743f4b0a-cbe7-47f0-a473-74d105d878b2.png)
 
+## Pluggin the customized cell to OpenLANE
+
+1. Copy the new lef file `sky130_inv_new.lef` and the libraries `sky130*.lib` inside the `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a.
+![image](https://user-images.githubusercontent.com/87559347/183274773-9a56636f-f24f-4596-a831-3c2cd477a9f7.png)
+
+2. Add the folowing to `config.tcl` inside the picorv32a:
+```
+set ::env(LIB_SYNTH) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+set ::env(LIB_FASTEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__fast.lib"
+set ::env(LIB_SLOWEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__slow.lib"
+set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+
+set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
+```
+
+The whole `config.tcl` is:
+![image](https://user-images.githubusercontent.com/87559347/183275069-8400ccfa-5b1f-471f-993d-d58c47601fe3.png)
+
+
+2. Run docker and prepare the design. Then before running synthesis, plug first the new lef file to the OpenLANE flow via:
+```
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+```
+Below is the statistic report, and as we can see that `sky130_vsdinv` is really used on the design!
+![image](https://user-images.githubusercontent.com/87559347/183275187-20f03e48-1790-4d37-b463-f58726dacc9d.png)
 
 
 References:
