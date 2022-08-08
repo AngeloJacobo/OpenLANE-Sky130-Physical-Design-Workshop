@@ -13,7 +13,7 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
  
 
 
-# Day 1:
+# DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK:
 
 The core of the chip will contain two types of blocks:
  - **Foundry IP Blocks** (e.g. ADC, DAC, PLL, and SRAM) = blocks which requires some amount of intelligent techniques to build which can only be designed by foundries.
@@ -101,7 +101,7 @@ After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32
 
 
 
-# Day 2  
+# DAY 2: Good floorplan vs bad floorplan and introduction to library cells
 
 ### Floor Plan General Steps:
 
@@ -232,7 +232,7 @@ Timing variables for propragation delay. The red is input waveform and blue is o
 
 Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshdol is usually 50% and slew rate threshold is 20%.
 
-# Day 3
+# DAY 3: Design library cell using Magic Layout and ngspice characterization
 
 Configurations on OpenLANE canbe changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session.
 
@@ -312,7 +312,7 @@ Open the spice file by typing `ngspice sky130A_inv.spice`. Generate a graph usin
 ![image](https://user-images.githubusercontent.com/87559347/183271057-ef99f8f2-5c76-49ac-a4a4-d425a41f6cf5.png)
 
 
-# DAY 4  
+# DAY 4: Pre-layout timing analysis and importance of good clock tree
 
 To run previous flow, add tag to prep design:
 ```
@@ -413,7 +413,7 @@ gen_pdn
 run_routing
 ```
 
-# DAY 5
+# DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
 Wth the help from the course tutors, the error yesterday is found to be due to the newer version of OpenLANE. For an error-free flow, use the below sequence of commands. :
 ```
