@@ -138,6 +138,11 @@ The input and output ports are placed on the space between the core and the die.
 #### 6. Logical Cell Placement Blockage
 This makes sure that the automated placement and routing tool does not place any cell on the pin locations of the die.
 
+Below are all 6  steps for floor planning:  
+
+![image](https://user-images.githubusercontent.com/87559347/183446309-a0714ec5-0619-4327-bdfe-890c19cc97e0.png)
+
+
 ### Steps for Placement
 1. Bind the netlist to a physical cell with real dimensions. The physical cell will come from a library that can provide multiple options for shapes, dimensions, and delay for same cells. 
 2. Next is placement of those physical cells to the floorplan. The flip flops must be placed as near as possible to the input and output pins to reduce timing delay. 
