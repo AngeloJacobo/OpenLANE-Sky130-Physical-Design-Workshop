@@ -3,13 +3,22 @@
 This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). This includes my notes for both lecture and lab portions.  
 
 # Table of Contents
- - [DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-1)
+ - [DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
+   - [Simplified RTL-to-GSDII Flow](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#simplified-rtl-to-gdsii-flow)
+   - [Directories inside OpenLANE Working Directory](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#notable-directories)
+   - [Steps for the Lab](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-the-lab)
  - [DAY 2: Good floorplan vs bad floorplan and introduction to library cells
-](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-2)
+](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
+   - [Steps for Placement](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-placement)
+   - [Steps for the Lab](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-the-lab-1)
+   - [Library Characterization](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#library-characterization)
  - [DAY 3: Design library cell using Magic Layout and ngspice characterization
-](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-3)
- - [DAY 4: Pre-layout timing analysis and importance of good clock tree](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-4)
- - [DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-5)
+](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
+   - [Steps for the Lab](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-the-lab-2)
+ - [DAY 4: Pre-layout timing analysis and importance of good clock tree](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-4-pre-layout-timing-analysis-and-importance-of-good-clock-tree)
+   - [Steps for Plugging in the Customized Cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-plugging-in-the-customized-cell-to-openlane)
+   - [About Delay Table](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#about-delay-table)
+ - [DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
  
 
 
