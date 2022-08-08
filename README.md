@@ -378,6 +378,15 @@ Today we will do generation of power distribution network. After running `gen_pd
 
 ![image](https://user-images.githubusercontent.com/87559347/183293313-adc46bad-0e2e-4bcf-a2fb-2e2e5b6a43b7.png)
 
+Next is routing. One simple algorithm for routing is Maze Routing or Lee's routing. The shortest path is one that follows a steady increment of (1-to-12 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends.
+
+![image](https://user-images.githubusercontent.com/87559347/183368014-e7f0e3d1-c968-42ea-8e4c-f8e965c6b748.png)
+
+DRC checking is mostly done for the photolitographic machine for chip fabrication:. Some DRC are:
+1. The minimum wirewidth
+2. Minimum wire pitch
+3. Minimum wire spacing
+
 
 Now, we will finally do the routing, simply run `run_routing`. After approximately 15 minutes, the output is:
 ![image](https://user-images.githubusercontent.com/87559347/183294065-92c9541d-e300-4e83-ae4e-bdd3ce252af4.png)
