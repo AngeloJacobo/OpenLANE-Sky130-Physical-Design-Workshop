@@ -1,6 +1,6 @@
 # OpenLANE-Sky130-Physical-Design-Workshop
 
-This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). This includes my notes for both lecture and lab portions.  
+This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). The goal is to cover the complete RTL2GDS flow using the opensource flow named [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane). 
 
 # Table of Contents
  - [DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
