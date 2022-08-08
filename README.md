@@ -1,6 +1,16 @@
 # OpenLANE-Sky130-Physical-Design-Workshop
 
-This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). This includes my notes for both lecture and lab portions.
+This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). This includes my notes for both lecture and lab portions.  
+
+# Table of Contents
+ - [DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#day-1)
+ - [DAY 2: Good floorplan vs bad floorplan and introduction to library cells
+](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#day-2)
+ - [DAY 3: Design library cell using Magic Layout and ngspice characterization
+](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#day-3)
+ - [DAY 4: Pre-layout timing analysis and importance of good clock tree](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#day-4)
+ - [DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#day-5)
+ 
 
 
 # Day 1:
@@ -310,9 +320,12 @@ prep -design picorv32a -tag [date]
 ```
 
 
-Now that we have the layout of the cell, we need to make sure that the input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch (this is a PnR requirement). To check that, we nned to change the grid of the magic to match the real tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those information.   
+Now that we have the layout of the cell, we need to make sure that: 
+ - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
+ - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch (this is a PnR requirement).  
+ To check these requirements, we need to change the grid of the magic to match the real tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those information.   
 
-Use grid command inside the tkon terminal to match the above needed settings:  
+Use `grid` command inside the tkon terminal to match the above needed settings:  
 
 ![image](https://user-images.githubusercontent.com/87559347/183272925-3e0fb501-33e0-4cb8-9863-6c55f965b1d5.png)\
 
