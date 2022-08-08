@@ -462,10 +462,13 @@ magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/li
 ```
 ![image](https://user-images.githubusercontent.com/87559347/183294391-13c987c5-33fa-4761-ba82-396c12749aab.png)
 
-Zooming in:
+Zooming in:  
+
 ![image](https://user-images.githubusercontent.com/87559347/183294992-8d197684-99e7-42d7-b10f-9105cb5b1761.png)
+ 
 
-### Congratulations!
+### DONE!
 
-References:
-http://opencircuitdesign.com/xcircuit/index.html
+# Acknowledgements
+ - [Nickson Jose - Workshop Instructor](https://www.udemy.com/user/nickson-jose/)
+ - [Kunal Ghosh - Co-founder (Co-founder of VSD)](https://www.udemy.com/user/anagha/)
