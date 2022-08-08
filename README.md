@@ -1,6 +1,6 @@
 # OpenLANE-Sky130-Physical-Design-Workshop
 
-This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). The goal is to cover the complete RTL2GDS flow using the opensource flow named [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane).
+This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). The goal is to cover the complete RTL2GDS flow using the open-source flow named [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane).
 
 ![image](https://user-images.githubusercontent.com/87559347/183438001-f1bee6d2-6e8c-47a7-a3cb-b63082727adc.png)
 
@@ -34,7 +34,7 @@ The core of the chip will contain two types of blocks:
  
  ![image](https://user-images.githubusercontent.com/87559347/182751377-2810d388-21b0-4df1-b1d4-c72176d80d28.png)
 
-Open Source Digital ASIC Design requires three opensource components:  
+Open Source Digital ASIC Design requires three open-source components:  
 - **RTL Designs** = github.com, librecores.org, opencores.org
 - **EDA Tools** = OpenROAD, OpenLANE,QFlow  
 - **PDK** = Google + Skywater 130nm Production PDK
@@ -51,7 +51,7 @@ Open Source Digital ASIC Design requires three opensource components:
 
  The final layout is in [GDSII file format](https://www.wikiwand.com/en/GDSII).
  
- [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane) = An opensource ASIC developement flow reference. It consists of multiple opensource tools needed for the whole RTL to GDSII flow. This is tuned epecially for Sky130 PDK. It also works for OSU 130nm. It is recommended to read the OpenLANE documentation before going forward.
+ [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane) = An open-source ASIC developement flow reference. It consists of multiple open-source tools needed for the whole RTL to GDSII flow. This is tuned epecially for Sky130 PDK. It also works for OSU 130nm. It is recommended to read the OpenLANE documentation before going forward.
  ![image](https://user-images.githubusercontent.com/87559347/182759711-6b9352ec-7652-4589-af31-53a409eb2830.png)
 
 ### Notable details are:  
@@ -73,8 +73,8 @@ Open Source Digital ASIC Design requires three opensource components:
 |   |   ├── ...
 ├── pdks                 -> contains pdk related files 
 │   ├── skywater-pdk     -> all Skywater 130nm PDKs
-│   ├── open-pdks        -> contains scripts that makes the PDK (which is normally just compatible to commercial tools) to work with the opensource EDA tool
-│   ├── sky130A          -> pdk variant made especially compatible for opensource tools
+│   ├── open-pdks        -> contains scripts that makes the PDK (which is normally just compatible to commercial tools) to work with the open-source EDA tool
+│   ├── sky130A          -> pdk variant made especially compatible for open-source tools
 │   │   │  ├── libs.ref  -> files specific to node process (timing lib, cell lef, tech lef) for example is `sky130_fd_sc_hd` (Sky130nm Foundry Standard Cell High Density)  
 │   │   │  ├── libs.tech -> files specific for the tool (klayout,netgenmagic...) 
 ```
