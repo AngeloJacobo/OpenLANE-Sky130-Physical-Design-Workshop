@@ -481,3 +481,7 @@ Zooming in:
 # Acknowledgements
  - [Nickson Jose - Workshop Instructor](https://www.udemy.com/user/nickson-jose/)
  - [Kunal Ghosh - Co-founder (Co-founder of VSD)](https://www.udemy.com/user/anagha/)
+ 
+ 
+# Inquiries  
+Connect with me at my linkedin: https://www.linkedin.com/in/angelo-jacobo/
