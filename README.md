@@ -467,7 +467,7 @@ Zooming in:
 ![image](https://user-images.githubusercontent.com/87559347/183294992-8d197684-99e7-42d7-b10f-9105cb5b1761.png)
  
 
-### DONE!
+### DONE! CONGRATULATIONS!
 
 # Acknowledgements
  - [Nickson Jose - Workshop Instructor](https://www.udemy.com/user/nickson-jose/)
