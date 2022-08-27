@@ -182,7 +182,7 @@ The  `README.md` describes all configuration variables for every stage and the t
 **2. Run floorplan on Openlane:** `% run floor_plan`
 
  
-**3. Check the results.** The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def` which is a design exchange format, containing the die area and positions. 
+**3. Check the results.** The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def` which is a [design exchange format](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html), containing the die area and positions. 
 ```
 ...........
 DESIGN picorv32a ;
@@ -243,15 +243,15 @@ The library cell developer must adhere to the rules given on the inputs so that 
  .
  ### Timing Characterization (timing .lib)
  
-Timing variables for slew. This is two inverters in series, red is output of first inverter and blue is output of second inverter:  
+Below are the timing variables for slew. This is two inverters in series, red is output of first inverter and blue is output of second inverter:  
 
 ![image](https://user-images.githubusercontent.com/87559347/183231913-a9b3826b-5139-4bdc-b12b-3495b87cd8b9.png)
 
-Timing variables for propragation delay. The red is input waveform and blue is output waveform of the buffer. The left side is rise delay and right side is fall delay.
+Below are the timing variables for propagation delay. The red is input waveform and blue is output waveform of the buffer. The left side is rise delay and right side is fall delay.
 
 ![image](https://user-images.githubusercontent.com/87559347/183232515-fe3cef76-8a2f-475d-9a64-392fc2fda111.png)
 
-Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshdol is usually 50% and slew rate threshold is 20%.
+Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshold is usually 50% and slew rate threshold is usually 20%-80%.
 
 # DAY 3: Design library cell using Magic Layout and ngspice characterization
 
