@@ -262,7 +262,7 @@ Configurations on OpenLANE can be changed on the flight. For example, to change 
 
 #### Steps to design a CMOS inverter cell.
 1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
-2. SPICE deck values = W/L (0.375u/0.25u means width is 375nm and length is 250nm). PMOS should be wider in width (2x or 3x) than NMOS ideally *(PMOS' hole is slower than NMOS' electron mobility so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS)*. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
+2. SPICE deck values = W/L (0.375u/0.25u means width(length of source and drain) is 375nm and length(distance between source and drain) is 250nm). PMOS should be wider in width (2x or 3x) than NMOS ideally *(PMOS' hole is slower than NMOS' electron mobility so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS)*. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
 3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.  
 
 Spice deck netlist description  
@@ -289,6 +289,8 @@ CMOS robustness depends on:
 **1. Switching threshold** = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
 
 **2. Propagation delay**  
+
+#### Note: A good refresher on MOSFETS [is this video.](https://www.youtube.com/watch?v=oSrUsM0hoPs)  
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
