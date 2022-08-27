@@ -155,7 +155,9 @@ The goal of placement is not yet on timing but on congestion. Also, standard cel
 
 Placement is done on two stages:
  - Global Placement = placement with no legalizations and goal is to reduce wirelength. It uses Half Perimeter Wirelength (HPWL) reduction model. 
- - Detailed Placement = placement with legalization where the standard cells are placed on stadard rows, abutted, and must have no overlaps  
+ - Detailed Placement = placement with legalization where the standard cells are placed on stadard rows, abutted, and must have no overlaps    
+ 
+#### Task for the Day 2 Lab: Find the area of the die
 
 ## Steps for the Lab:
 **1. Set configuration variables.** Before running floorplan stage, the configuration variables or switches must be configured first. The configuration variables are on `openlane/configuration`:  
@@ -255,9 +257,8 @@ Negative propagation delay is unexpected. That means the output comes before the
 
 # DAY 3: Design library cell using Magic Layout and ngspice characterization
 
-Configurations on OpenLANE canbe changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session.
+Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
-### The target onforward is to modify a sample cell (inverter) and insert it to openlane 
 
 #### Steps to design a CMOS inverter cell.
 1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
@@ -287,7 +288,9 @@ CMOS robustness depends on:
 **1. Switching threshold** = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V)
 **2. Propagation delay**
 
-## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)
+## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
+#### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
+
 ## Steps for the Lab:
 
 1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:  
