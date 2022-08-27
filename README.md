@@ -255,14 +255,14 @@ Below are the timing variables for propagation delay. The red is input waveform 
 
 Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshold is usually 50% and slew rate threshold is usually 20%-80%.
 
-# DAY 3: Design library cell using Magic Layout and ngspice characterization
+# DAY 3: Design library cell using Magic Layout and ngspice Characterization
 
 Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
 
 #### Steps to design a CMOS inverter cell.
 1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
-2. SPICE deck values = W/L (0.375u/0.25u means width is 375nm and length is 250nm). PMOS should be wider in width (2x or 3x) than NMOS ideally. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
+2. SPICE deck values = W/L (0.375u/0.25u means width is 375nm and length is 250nm). PMOS should be wider in width (2x or 3x) than NMOS ideally *(PMOS' hole is slower than NMOS' electron mobility so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS)*. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
 3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.  
 
 Spice deck netlist description  
@@ -284,9 +284,11 @@ dc1
 plot out vs in 
 ```  
 
-CMOS robustness depends on:
-**1. Switching threshold** = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V)
-**2. Propagation delay**
+CMOS robustness depends on:  
+
+**1. Switching threshold** = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
+
+**2. Propagation delay**  
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
