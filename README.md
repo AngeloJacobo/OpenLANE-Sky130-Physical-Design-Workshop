@@ -73,22 +73,22 @@ Open Source Digital ASIC Design requires three open-source components:
 |   |   ├── ...
 ├── pdks                 -> contains pdk related files 
 │   ├── skywater-pdk     -> all Skywater 130nm PDKs
-│   ├── open-pdks        -> contains scripts that makes the PDK (which is normally just compatible to commercial tools) to work with the open-source EDA tool
+│   ├── open-pdks        -> contains scripts that makes the commerical PDK (which is normally just compatible to commercial tools) to also be compatible with the open-source EDA tool
 │   ├── sky130A          -> pdk variant made especially compatible for open-source tools
 │   │   │  ├── libs.ref  -> files specific to node process (timing lib, cell lef, tech lef) for example is `sky130_fd_sc_hd` (Sky130nm Foundry Standard Cell High Density)  
-│   │   │  ├── libs.tech -> files specific for the tool (klayout,netgenmagic...) 
+│   │   │  ├── libs.tech -> files specific for the tool (klayout,netgen,magic...) 
 ```
 
 Inside a specfic design folder contains a `config.tcl` which overrides the default settings on OpenLANE. These configurations are specific to a design (e.g. clock period, clock port, verilog files...). The priority order for the OpenLANE settings:
-1. sky130_xxxxx_config.tcl
-2. config.tcl
-3. Default values
+1. sky130_xxxxx_config.tcl in `Openlane/designs/[design]/`
+2. config.tcl in `Openlane/designs/[design]/`
+3. Default values in `Openlane/configuration/`
 
 #### Task for the Day 1 Lab: Find the flipflop ratio percentage for the design `picorv32a`. This is the ratio of the number of flip flops to the total number of cells
 
 ## Steps for the Lab:
 **1. Run OpenLANE:**
- - `$ docker` = Open the docker platform inside the `openlane/`
+ - `$ make mount` = Open the docker platform inside the `openlane/`
  - `% flow.tcl -interactive` = run script for automating the whole RTL to GDSII flow but in step by step `-interactive` mode
  - `% package require openlane 0.9` == retrives all dependencies for running v0.9 of OpenLANE  
  
@@ -206,11 +206,14 @@ To center the view, press "s" to select whole die then press "v" to center the v
 ![image](https://user-images.githubusercontent.com/87559347/183100900-b3527702-5375-4a4e-ad87-194fce382128.png)
 
 
-
+#### Note on using Magic:
+ - To select a particular cell instance (e.g. cell \_08555_ which can be searched in the def file): `% select cell _08555_`
+ - To list all cells in the layout: `% cellname allcells`
+ - To check if a cell exists: `% cellname exists sky130_fd_sc_hd__xor3_4`
 
 **5 Run placement:** `% run_placement`. This commmand is a wrapper which does global placement (performed by RePlace tool), Optimization (by Resier tool), and detailed placement (by OpenDP tool). It displays hundreds of iterations displaying HPWL and OVFL. The algorithm is said to be converging if the overflow is decreasing. It also checks the legality. 
 
-**6. View the output of this stage**. The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def.` To see actual layout after floorplan, open def file using `magic`:  
+**6. View the output of this stage**. The output of this stage is `runs/[date]/results/placement/picorv32a.placement.def.` To see actual layout after placement, open def file using `magic`:  
 
 ```
 magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def
