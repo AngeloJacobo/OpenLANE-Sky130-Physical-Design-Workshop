@@ -333,15 +333,22 @@ Below is the result of SPICE simulation for transient analysis:
 
 ![image](https://user-images.githubusercontent.com/87559347/187056370-18949899-a158-4307-96d9-d5c06bbeed66.png)
  
- ### CMOS Fabrication Process  
+ ### CMOS Fabrication Process (16-Mask CMOS Process)
  1. Selecting a substrate = Layer where the IC is fabricated. Most commonly used is P-type substrate  
- 2. Creating active region for transistor = Separate the transistor regions using SiO2 as isolation  
-        - Photoresist layer = Can be etched away via UV light  
-        - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
-        - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions  
+ 2. Creating active region for transistor = Separate the transistor regions using SiO2 as isolation
+  - Mask = Covers the photoresist layer that must not be etched away (protects the two transistor active regions)
+  - Photoresist layer = Can be etched away via UV light  
+  - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
+  - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions  
+  
+![image](https://user-images.githubusercontent.com/87559347/187062659-9e18e9a5-eff4-4d01-804d-cc1e10597486.png)  
 
-![image](https://user-images.githubusercontent.com/87559347/187062659-9e18e9a5-eff4-4d01-804d-cc1e10597486.png)
-
+ 3. N-Well and P-Well Fabrication = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
+  - Phosporus (5 valence electron) is used to form N-well  
+  - Boron (3 valence electron) is used to form P-Well.  
+  - Mask 2 protects the N-Well (PMOS side) while P-Well (NMOS side) is being fabricated then Mask 3 for vice-versa.  
+   
+![image](https://user-images.githubusercontent.com/87559347/187099587-4a837f08-b6d3-4cb9-afe6-75ee8d88cfff.png)  
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
