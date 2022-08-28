@@ -291,7 +291,33 @@ CMOS robustness depends on:
 **2. Propagation delay**  
 
 #### Note: A good refresher on MOSFETS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
+DC analysis in SPICE uses DC input of 2.5V. Simulation operation is DC sweep from 0V to 2.5V by 0.05V steps:
+```
+Vin in 0 2.5
+*** Simulation Command ***
+.op
+.dc Vin 0 2.5 0.05
+```  
 
+While transient analysis in SPICE uses pulse input: 
+1. starts at 0V
+2. ends at 2.5V
+3. starts at time 0
+4. rise time of 10ps
+5. fall time of 10ps
+6. pulse-width of 1ns
+7. period of 2ns  
+
+![image](https://user-images.githubusercontent.com/87559347/187055752-dd66feae-f1e7-4b5b-a037-d1a148b01833.png)  
+
+The simulation operation has 10ps step and ends at 4ns:  
+
+```
+Vin in 0 0 pulse 0 2.5 0 10p 10p 1n 2n 
+*** Simulation Command ***
+.op
+.tran 10p 4n
+```
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
