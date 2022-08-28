@@ -333,14 +333,16 @@ Below is the result of SPICE simulation for transient analysis:
 
 ![image](https://user-images.githubusercontent.com/87559347/187056370-18949899-a158-4307-96d9-d5c06bbeed66.png)
  
- ### CMOS Fabrication Process
- 1. Selecting a substrate = Layer where the IC is fabricated. Most commonly used is P-type substrate
- 2. Creating active region for transistor = Separate the transistor regions using SiO2 as isolation
-        - Photoresist layer = Can be etched away via UV light
-        - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)
-        - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions
- 
- 
+ ### CMOS Fabrication Process  
+ 1. Selecting a substrate = Layer where the IC is fabricated. Most commonly used is P-type substrate  
+ 2. Creating active region for transistor = Separate the transistor regions using SiO2 as isolation  
+        - Photoresist layer = Can be etched away via UV light  
+        - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
+        - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions  
+
+![image](https://user-images.githubusercontent.com/87559347/187062659-9e18e9a5-eff4-4d01-804d-cc1e10597486.png)
+
+
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
 
