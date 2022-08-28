@@ -260,12 +260,17 @@ Negative propagation delay is unexpected. That means the output comes before the
 Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
 
-#### Steps to design a CMOS inverter cell.
+### Steps to design a CMOS inverter cell
 1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
-2. SPICE deck values = W/L (0.375u/0.25u means width*(length of source and drain)* is 375nm and length*(distance between source and drain)* is 250nm). PMOS should be wider in width (2x or 3x) than NMOS ideally *(PMOS' hole is slower than NMOS' electron mobility so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS)*. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
-3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.  
+2. SPICE deck values = value for W/L (0.375u/0.25u means width is 375nm and lengthis 250nm). PMOS should be wider in width(2x or 3x) than NMOS. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
+3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.    
 
-Spice deck netlist description  
+#### Notes:
+ - Width is the length of source and drain. Length is the distance between source and drain
+ - PMOS' hole carrier is slower than NMOS' electron carrier mobility, so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS  
+ - A good refresher on MOSFETS and CMOS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
+
+### Spice deck netlist description  
 
 ![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
 
@@ -284,14 +289,14 @@ dc1
 plot out vs in 
 ```  
 
+### SPICE Analysis for Switching Threshold and Propagation Delay
 CMOS robustness depends on:  
 
 **1. Switching threshold** = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
 
-**2. Propagation delay**  
+**2. Propagation delay** = rise or fall delay
 
-#### Note: A good refresher on MOSFETS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
-DC analysis in SPICE uses DC input of 2.5V. Simulation operation is DC sweep from 0V to 2.5V by 0.05V steps:
+DC transfer analysis is used for finding switching threshold. SPICE DC analysis below uses DC input of 2.5V. Simulation operation is DC sweep from 0V to 2.5V by 0.05V steps:
 ```
 Vin in 0 2.5
 *** Simulation Command ***
@@ -299,7 +304,7 @@ Vin in 0 2.5
 .dc Vin 0 2.5 0.05
 ```  
 
-While transient analysis in SPICE uses pulse input: 
+Meanwhile, transient analysis is used for finding propagation delay. SPICE transient analysis uses pulse input: 
 1. starts at 0V
 2. ends at 2.5V
 3. starts at time 0
