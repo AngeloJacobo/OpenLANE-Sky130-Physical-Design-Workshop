@@ -381,6 +381,10 @@ Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source an
 
 ![image](https://user-images.githubusercontent.com/87559347/187158161-4d230654-5102-4225-8e58-d6d8ed950990.png)
 
+When polysilicon crosses N-diffusion/P-diffusion, then an NMOS/PMOS is created. [Explained here](https://electronics.stackexchange.com/questions/223973/why-diffusions-in-cmos-cad-tool-magic-is-continuous) is why the diffusion layer "seems" to be under the polysilicon (substrate is supposedly the layer directly below the polysilicon).
+
+[Chip design stick diagram](http://www.southampton.ac.uk/~bim/notes/cad/guides/sticks.html)
+
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
