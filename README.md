@@ -377,6 +377,10 @@ Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source an
 
 ![image](https://user-images.githubusercontent.com/87559347/187141267-b043152d-0a76-4101-90ec-82c9adcc64e2.png)
 
+**8. Higher Level Metal Formation** = We need to planarize first the layer via CMP before adding a metal interconnect. Aluminum contact is used to connect the lower contact to higher metal layer.
+
+![image](https://user-images.githubusercontent.com/87559347/187156483-17d90a41-1415-4bf4-b72f-d8171c388ee4.png)
+
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
