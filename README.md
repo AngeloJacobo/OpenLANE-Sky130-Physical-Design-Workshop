@@ -368,10 +368,14 @@ Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source an
 
 ![image](https://user-images.githubusercontent.com/87559347/187121868-94dfade0-2c63-4c9c-afef-942ef9662d5a.png)
 **6. Source and Drain Formation** = Mask 9 is for N+ implantation and Mask 10 for P+ implantation  
- - Channeling is when implantations dig too deep into substrate.  
+ - Channeling is when implantations dig too deep into substrate so add screen oxide before implantation
  - The side-wall spacers maintains the N-/P- while implanting the N+/P+    
  
 ![image](https://user-images.githubusercontent.com/87559347/187128442-76d48790-53a0-4ad2-9856-924f3efd33eb.png)
+
+**7. Form Contacts and Interconnects** =  TiN is for local interconnections and also for bringing contacts to the top. TiS2 is for the contact to the actual Drain-Gate-Source.  
+
+![image](https://user-images.githubusercontent.com/87559347/187141267-b043152d-0a76-4101-90ec-82c9adcc64e2.png)
 
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
