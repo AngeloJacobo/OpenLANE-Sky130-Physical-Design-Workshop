@@ -336,7 +336,7 @@ Below is the result of SPICE simulation for transient analysis:
  ### CMOS Fabrication Process (16-Mask CMOS Process)
  1. Selecting a substrate = Layer where the IC is fabricated. Most commonly used is P-type substrate  
  2. Creating active region for transistor = Separate the transistor regions using SiO2 as isolation
-  - Mask = Covers the photoresist layer that must not be etched away (protects the two transistor active regions)
+  - Mask 1 = Covers the photoresist layer that must not be etched away (protects the two transistor active regions)
   - Photoresist layer = Can be etched away via UV light  
   - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
   - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions  
@@ -346,9 +346,18 @@ Below is the result of SPICE simulation for transient analysis:
  3. N-Well and P-Well Fabrication = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
   - Phosporus (5 valence electron) is used to form N-well  
   - Boron (3 valence electron) is used to form P-Well.  
-  - Mask 2 protects the N-Well (PMOS side) while P-Well (NMOS side) is being fabricated then Mask 3 for vice-versa.  
+  - Mask 2 protects the N-Well (PMOS side) while P-Well (NMOS side) is being fabricated then Mask 3 while N-Well (PMOS side) is being fabricated
    
-![image](https://user-images.githubusercontent.com/87559347/187099587-4a837f08-b6d3-4cb9-afe6-75ee8d88cfff.png)  
+![image](https://user-images.githubusercontent.com/87559347/187099587-4a837f08-b6d3-4cb9-afe6-75ee8d88cfff.png) 
+
+ 4. Formation of Gate = Gate fabrication affects threshold voltage. Factors affecting threshold voltage includes:    
+ 
+![image](https://user-images.githubusercontent.com/87559347/187111068-874f408a-d41b-4b16-a5f0-49edfced8926.png)
+
+Main parameters are:
+  - Doping Concentration = Controlled by ion implantation (Mask 4 for Boron implantation in NMOS P-Well and Mask 5 for Arsenic implantation in PMOS N-Well)
+  - Oxide capacitance = Controlled by oxide thickness  
+ 
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
