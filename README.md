@@ -361,6 +361,8 @@ Main parameters are:
  Mask 6 is for gate formation using polysilicon layer.
  
 ![image](https://user-images.githubusercontent.com/87559347/187116601-0ac34212-3622-4719-9309-fca887ad995a.png)
+5. Lightly Doped Drain formation = Before forming the source and drain layer, lightly doped impurity is added: Mask 7 to form N- for NMOS and Mask 8 to form P- for PMOS. Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source and drain but the lightly doped impurity will help maintain spacing between the source and drain and prevent hot electron effect and short channel effect.  
+![image](https://user-images.githubusercontent.com/87559347/187121868-94dfade0-2c63-4c9c-afef-942ef9662d5a.png)
 
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
