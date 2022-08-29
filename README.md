@@ -378,7 +378,11 @@ Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source an
 ![image](https://user-images.githubusercontent.com/87559347/187141267-b043152d-0a76-4101-90ec-82c9adcc64e2.png)
 
 **8. Higher Level Metal Formation** = We need to planarize first the layer via CMP before adding a metal interconnect. Aluminum contact is used to connect the lower contact to higher metal layer. Process is repeated until the contact reached the outermost layer.
-
+ - Mask 12 is for first contact hole
+ - Mask 13 is for first Aluminum contact layer
+ - Mask 14 is for second contact hole
+ - Mask 15 is for second Aluminum contact layer. Mask 16 is for making contact to topmost layer. 
+ 
 ![image](https://user-images.githubusercontent.com/87559347/187158161-4d230654-5102-4225-8e58-d6d8ed950990.png)
 
 When polysilicon crosses N-diffusion/P-diffusion, then an NMOS/PMOS is created. [Explained here](https://electronics.stackexchange.com/questions/223973/why-diffusions-in-cmos-cad-tool-magic-is-continuous) is why the diffusion layer "seems" to be under the polysilicon (substrate is supposedly the layer directly below the polysilicon).
