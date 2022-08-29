@@ -334,8 +334,8 @@ Below is the result of SPICE simulation for transient analysis:
 ![image](https://user-images.githubusercontent.com/87559347/187056370-18949899-a158-4307-96d9-d5c06bbeed66.png)
  
  ### CMOS Fabrication Process (16-Mask CMOS Process)
- 1. Selecting a substrate = Layer where the IC is fabricated. Most commonly used is P-type substrate  
- 2. Creating active region for transistor = Separate the transistor regions using SiO2 as isolation
+ **1. Selecting a substrate** = Layer where the IC is fabricated. Most commonly used is P-type substrate  
+ **2. Creating active region for transistor** = Separate the transistor regions using SiO2 as isolation
   - Mask 1 = Covers the photoresist layer that must not be etched away (protects the two transistor active regions)
   - Photoresist layer = Can be etched away via UV light  
   - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
@@ -343,14 +343,14 @@ Below is the result of SPICE simulation for transient analysis:
   
 ![image](https://user-images.githubusercontent.com/87559347/187062659-9e18e9a5-eff4-4d01-804d-cc1e10597486.png)  
 
- 3. N-Well and P-Well Fabrication = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
+ **3. N-Well and P-Well Fabrication** = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
   - Phosporus (5 valence electron) is used to form N-well  
   - Boron (3 valence electron) is used to form P-Well.  
   - Mask 2 protects the N-Well (PMOS side) while P-Well (NMOS side) is being fabricated then Mask 3 while N-Well (PMOS side) is being fabricated
    
 ![image](https://user-images.githubusercontent.com/87559347/187099587-4a837f08-b6d3-4cb9-afe6-75ee8d88cfff.png) 
 
- 4. Formation of Gate = Gate fabrication affects threshold voltage. Factors affecting threshold voltage includes:    
+ **4. Formation of Gate** = Gate fabrication affects threshold voltage. Factors affecting threshold voltage includes:    
  
 ![image](https://user-images.githubusercontent.com/87559347/187111068-874f408a-d41b-4b16-a5f0-49edfced8926.png)
 
@@ -361,8 +361,17 @@ Main parameters are:
  Mask 6 is for gate formation using polysilicon layer.
  
 ![image](https://user-images.githubusercontent.com/87559347/187116601-0ac34212-3622-4719-9309-fca887ad995a.png)
-5. Lightly Doped Drain formation = Before forming the source and drain layer, lightly doped impurity is added: Mask 7 to form N- for NMOS and Mask 8 to form P- for PMOS. Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source and drain but the lightly doped impurity will help maintain spacing between the source and drain and prevent hot electron effect and short channel effect.  
+**5. Lightly Doped Drain formation** = Before forming the source and drain layer, lightly doped impurity is added: 
+ - Mask 7 for N- implantation (lightly doped N-type) for NMOS 
+ - Mask 8 for P- implantation (lightly doped P-type) for PMOS.  
+Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source and drain but the lightly doped impurity will help maintain spacing between the source and drain and prevent hot electron effect and short channel effect. 
+
 ![image](https://user-images.githubusercontent.com/87559347/187121868-94dfade0-2c63-4c9c-afef-942ef9662d5a.png)
+**6. Source and Drain Formation** = Mask 9 is for N+ implantation and Mask 10 for P+ implantation  
+ - Channeling is when implantations dig too deep into substrate.  
+ - The side-wall spacers maintains the N-/P- while implanting the N+/P+    
+ 
+![image](https://user-images.githubusercontent.com/87559347/187128442-76d48790-53a0-4ad2-9856-924f3efd33eb.png)
 
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
