@@ -395,7 +395,7 @@ The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here 
 
 
 
-[LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) = metal layer directon (horizontal or vertical) is alternating. Metal layer width and thickness is increasing. 
+[LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) = A LEF file is used by the router tool in PnR design to get the location of standard cells pins to route them properly. So it is basically the abstract form of layout of a standard cell. `picorv32a/runs/[DATE]/tmp` contains the merged lef files (cell LEF and tech LEF). Notice how metal layer directon (horizontal or vertical) is alternating. Also, metal layer width and thickness is increasing. 
 
 
 
