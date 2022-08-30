@@ -391,13 +391,22 @@ When polysilicon crosses N-diffusion/P-diffusion (diffusion is also called impla
 
 [Chip design stick diagram](http://www.southampton.ac.uk/~bim/notes/cad/guides/sticks.html)  
 
-The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here is the process stack diagram](https://skywater-pdk.readthedocs.io/en/main/rules/assumptions.html) of sky130nm PDK
+The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here is the process stack diagram](https://skywater-pdk.readthedocs.io/en/main/rules/assumptions.html) of sky130nm PDK. Metal 1 is for Power and Ground lines. `Nsubstratecontact` connects the N-well to locali. `licon` connects the locali to metal1.Locali is for local connections of cells
 
+[Great guide on layout using Magic.](https://www.youtube.com/watch?v=RPppaGdjbj0)
 
 
 [LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) = A LEF file is used by the router tool in PnR design to get the location of standard cells pins to route them properly. So it is basically the abstract form of layout of a standard cell. `picorv32a/runs/[DATE]/tmp` contains the merged lef files (cell LEF and tech LEF). Notice how metal layer directon (horizontal or vertical) is alternating. Also, metal layer width and thickness is increasing. 
 
+## Magic Commands  
+- Left click = lower-left corner of box  
+- Right click = upper-right corner of box  
+- :box = display parameters of selected box  
+- :grid 0.5um 0.5um = turn on/off and set grid   
+- :snap user = snap based on current grid  
+- :help snap = display help for command  
 
+# stop at 7:30
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
