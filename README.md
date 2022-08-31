@@ -412,7 +412,7 @@ The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here 
 - :erase poly = delete poly inside the box
 - middle click on empty area will turn the box into empty (similar to erasing it)
 
-`drc why` will show DRC violation and also the DRC name which can be referenced from [Sky130 PDK Periphery Rules](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#hvtp).
+`drc why` will show DRC violation and also the DRC name which can be referenced from [Sky130 PDK Periphery Rules](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root).
 
 ![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
 
