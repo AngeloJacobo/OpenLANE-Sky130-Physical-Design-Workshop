@@ -405,8 +405,16 @@ The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here 
 - :grid 0.5um 0.5um = turn on/off and set grid   
 - :snap user = snap based on current grid  
 - :help snap = display help for command  
+- :drc style drc(full)
+- "z" = zoom in, "Z" = zoom out, "ctrl + z" = zoom into the box 
+- :paint poly = paint "poly" to current box
+- :drc why = show drc violation inside selected area (white dots are DRC violations )
+- :erase poly = delete poly inside the box
+- middle click on empty area will turn the box into empty (similar to erasing it)
 
-# stop at 7:30
+`drc why` will show DRC violation and also the DRC name which can be referenced from [Sky130 PDK Periphery Rules](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#hvtp).
+
+![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 #### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
