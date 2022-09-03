@@ -425,21 +425,6 @@ Layer hierarchy (NMOS): Psubstrate -> Psubstrate Diffusion (psd) -> Psubstrate C
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 
 #### Task for the Day 3 Lab Part 1: Characterize a sample inverter cell by its slew rate and propagation delay.
-Rise Transition [output transition time from 20%(0.66V) to 80%(2.64V)]:  
-
-![image](https://user-images.githubusercontent.com/87559347/188260029-84633ed7-446e-4d1b-b723-12397dcfc71a.png)  
-
-**Tr = 2.19981ns - 2.15739ns = 0.04242 ns**
-
-Fall Transition [output transition time from 80%(2.64V) to 20%(0.66V)]:  
-
-![image](https://user-images.githubusercontent.com/87559347/188260236-4cc5d4c7-654a-4600-a277-9f6c1df63b11.png)
-
-**Tf = 4.0672ns - 4.04007ns = 0.02713ns**  
-
-Rise Delay:
-Fall Delay:
-
 ## Steps for the Lab Part 1:
 
 1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. Below are the contents of `vsdstdcelldesign/libs/`:
@@ -493,7 +478,26 @@ Open the spice file by typing `ngspice sky130A_inv.spice`. Generate a graph usin
 
 ![image](https://user-images.githubusercontent.com/87559347/183271057-ef99f8f2-5c76-49ac-a4a4-d425a41f6cf5.png)
 
-Using this transient response, we will now characterize the cell's slew rate and propagation delay:
+Using this transient response, we will now characterize the cell's slew rate and propagation delay:  
+- Rise Transition [output transition time from 20%(0.66V) to 80%(2.64V)]:
+    - **Tr_r = 2.19981ns - 2.15739ns = 0.04242 ns**  
+![image](https://user-images.githubusercontent.com/87559347/188260029-84633ed7-446e-4d1b-b723-12397dcfc71a.png)  
+
+
+- Fall Transition [output transition time from 80%(2.64V) to 20%(0.66V)]:
+   - **Tr_f = 4.0672ns - 4.04007ns = 0.02713ns**   
+![image](https://user-images.githubusercontent.com/87559347/188260236-4cc5d4c7-654a-4600-a277-9f6c1df63b11.png)
+
+
+- Rise Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
+   - **D_r = 2.18197ns - 2.15003ns = 0.03194ns**   
+![image](https://user-images.githubusercontent.com/87559347/188261194-395c7cfd-caea-4efa-a670-310cb30ff6a2.png)
+
+
+- Fall Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
+   - **D_f = 4.05364ns - 4.05001ns =0.00363ns**  
+![image](https://user-images.githubusercontent.com/87559347/188261518-792d3e99-6a5a-423d-9309-62287c608ec0.png)
+
 
 # DAY 4: Pre-layout timing analysis and importance of good clock tree
 
