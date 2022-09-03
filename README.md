@@ -414,6 +414,10 @@ The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here 
 - :select area = select all geometries inside the box
 - :copy n 30 = copy selected geometries to North by 30 grid steps
 - :move n 1 = move selected geometries to North by 1 step ("." to move more, "u" to undo)
+- "s" three times will select all geometries electrically connected to each other    
+
+Layer hierarchy (NMOS): Psubstrate -> Psubstrate Diffusion (psd) -> Psubstrate Contact (psc) -> Local-interconnect (li) -> Mcon -> Metal1
+
 `drc why` will show DRC violation and also the DRC name which can be referenced from [Sky130 PDK Periphery Rules](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root).
 
 ![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
@@ -434,7 +438,7 @@ The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here 
 3. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
 4. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.  
 
-![image](https://user-images.githubusercontent.com/87559347/183270366-f5a70661-b0d3-4b4e-b72d-5831b6ff6da3.png)
+![image](https://user-images.githubusercontent.com/87559347/188252410-0f71a30b-b05e-4ddb-9d95-2fd40712825d.png)
 
 We then modify the spice file to be able to plot a transient response:
 
