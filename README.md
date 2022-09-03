@@ -423,9 +423,24 @@ Layer hierarchy (NMOS): Psubstrate -> Psubstrate Diffusion (psd) -> Psubstrate C
 ![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
-#### Task for the Day 3 Lab: Modify a sample cell (inverter) and insert it to OpenLANE flow  
 
-## Steps for the Lab:
+#### Task for the Day 3 Lab Part 1: Characterize a sample inverter cell by its slew rate and propagation delay.
+Rise Transition [output transition time from 20%(0.66V) to 80%(2.64V)]:  
+
+![image](https://user-images.githubusercontent.com/87559347/188260029-84633ed7-446e-4d1b-b723-12397dcfc71a.png)  
+
+**Tr = 2.19981ns - 2.15739ns = 0.04242 ns**
+
+Fall Transition [output transition time from 80%(2.64V) to 20%(0.66V)]:  
+
+![image](https://user-images.githubusercontent.com/87559347/188260236-4cc5d4c7-654a-4600-a277-9f6c1df63b11.png)
+
+**Tf = 4.0672ns - 4.04007ns = 0.02713ns**  
+
+Rise Delay:
+Fall Delay:
+
+## Steps for the Lab Part 1:
 
 1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. Below are the contents of `vsdstdcelldesign/libs/`:
 ![image](https://user-images.githubusercontent.com/87559347/187333491-7fd10850-9f8a-486d-9d4c-a93f4002fdea.png)
@@ -443,26 +458,31 @@ Layer hierarchy (NMOS): Psubstrate -> Psubstrate Diffusion (psd) -> Psubstrate C
 We then modify the spice file to be able to plot a transient response:
 
 ```
-** SPICE3 file created from sky130_inv.ext - technology: sky130A
+* SPICE3 file created from sky130_inv.ext - technology: sky130A
 
 .option scale=0.01u
-.include ./libs/nshort.lib
 .include ./libs/pshort.lib
+.include ./libs/nshort.lib
 
-//.subckt sky130_inv A Y VPWR VGND
+* .subckt sky130_inv A Y VPWR VGND
+M0 Y A VGND VGND nshort_model.0 ad=1435 pd=152 as=1365 ps=148 w=35 l=23
+M1 Y A VPWR VPWR pshort_model.0 ad=1443 pd=152 as=1517 ps=156 w=37 l=23
+C0 A VPWR 0.08fF
+C1 Y VPWR 0.08fF
+C2 A Y 0.02fF
+C3 Y VGND 0.18fF
+C4 VPWR VGND 0.74fF
+* .ends
 
-M0 Y A VGND VGND nshort_model.0 ad=0 pd=0 as=0 ps=0 w=35 l=23
-M1 Y A VPWR VPWR pshort_model.0 ad=0 pd=0 as=0 ps=0 w=37 l=23
-VDD VPWR 0 3.3V
-VSS VGND 0 0V
-Va A VGND PULSE(0V 3.3V 0 0.1n 0.1n 2ns 4ns)
-C0 Y A 0.05fF
-C1 VPWR A 0.07fF
-C2 Y VPWR 0.11fF
-C3 Y VGND 2fF
-C4 VPWR VGND 0.59fF
-//.ends
-.tran 1n 20ns
+* Power supply 
+VDD VPWR 0 3.3V 
+VSS VGND 0 0V 
+
+* Input Signal
+Va A VGND PULSE(0V 3.3V 0 0.1ns 0.1ns 2ns 4ns)
+
+* Simulation Control
+.tran 1n 20n
 .control
 run
 .endc
@@ -473,6 +493,7 @@ Open the spice file by typing `ngspice sky130A_inv.spice`. Generate a graph usin
 
 ![image](https://user-images.githubusercontent.com/87559347/183271057-ef99f8f2-5c76-49ac-a4a4-d425a41f6cf5.png)
 
+Using this transient response, we will now characterize the cell's slew rate and propagation delay:
 
 # DAY 4: Pre-layout timing analysis and importance of good clock tree
 
