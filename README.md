@@ -398,7 +398,7 @@ The layer hierarchy for NMOS is: Psubstrate -> Psubstrate Diffusion (psd) -> Psu
 The output of the layout is the LEF file. [LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is used by the router tool in PnR design to get the location of standard cells pins to route them properly. So it is basically the abstract form of layout of a standard cell. `picorv32a/runs/[DATE]/tmp` contains the merged lef files (cell LEF and tech LEF). Notice how metal layer directon (horizontal or vertical) is alternating. Also, metal layer width and thickness is increasing. 
 
 ## Magic Commands  
-[Here is a great guide](https://www.youtube.com/watch?v=RPppaGdjbj0) on layout using Magic.
+[Here is a great video guide](https://www.youtube.com/watch?v=RPppaGdjbj0) on layout using Magic. And [here is the Magic website](http://opencircuitdesign.com/magic/) with turorials.
 - Left click = lower-left corner of box  
 - Right click = upper-right corner of box  
 - :box = display parameters of selected box  
@@ -495,6 +495,15 @@ Using this transient response, we will now characterize the cell's slew rate and
 - Fall Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
    - **D_f = 4.05364ns - 4.05001ns =0.00363ns**  
 ![image](https://user-images.githubusercontent.com/87559347/188261518-792d3e99-6a5a-423d-9309-62287c608ec0.png)
+
+#### Task for the Day 3 Lab Part 2: Characterize a sample inverter cell by its slew rate and propagation delay.
+## Steps for the Lab Part 2:
+### Preparations:
+Read through [this site about tech file](http://opencircuitdesign.com/magic/techref/maint2.html). All technology-specific information comes from a technology file. This file includes such information as layer types used, electrical connectivity between types, design rules, rules for mask generation, and rules for extracting netlists for circuit simulation. 
+Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root)
+
+1. Download the [lab contents from this site](opencircuitdesign.com/open_pdks/archive/drc_tests.tgz). Extract the tarball. Inside the `drc_tests/` are the `.mag` layout files and the `sky130A.tech`.  
+2.
 
 
 # DAY 4: Pre-layout timing analysis and importance of good clock tree
