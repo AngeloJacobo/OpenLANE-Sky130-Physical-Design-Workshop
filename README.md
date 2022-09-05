@@ -505,11 +505,14 @@ Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater
 1. Download the [lab contents from this site](opencircuitdesign.com/open_pdks/archive/drc_tests.tgz). Extract the tarball. Inside the `drc_tests/` are the `.mag` layout files and the `sky130A.tech`.  
 
 2. Open magic with `poly.mag` as input: `magic poly.mag`. Focus on `Incorrect poly.9` layout. As described on the poly.9 [design rule of SKY130 PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#poly), the spacing between polyresistor with poly or diff/tap must at least be 0.480um. Using `:box`, we can see that the distance is 0.250um YET there is no DRC violations shown. Our goal is to fix the tech file to include that DRC.  
-
 ![image](https://user-images.githubusercontent.com/87559347/188370620-7e802ce0-cd15-4385-9b73-d8f5ee5fe8ae.png)
 
-3. Open `sky130A.tech`. The included rules for poly.9 are only for the spacing between the n-poly resistor with n-diffusion and the spacing between the p-poly resistor with diffusion. We will now add new rules for the spacing between the **poly resistor with poly non-resistor**, highlighted green below are the two added rules. On the left is the rule for spacing between n-poly resistor with poly non-resistor and on the right is the rule for the spacing between the p-poly resistor with poly non-resistor.
-![image](https://user-images.githubusercontent.com/87559347/188371251-52c24c5d-cdc5-450a-9dec-39f5b683fa65.png)
+3. Open `sky130A.tech`. The included rules for poly.9 are only for the spacing between the n-poly resistor with n-diffusion and the spacing between the p-poly resistor with diffusion. We will now add new rules for the spacing between the **poly resistor with poly non-resistor**, highlighted green below are the two added rules. On the left is the rule for spacing between n-poly resistor with poly non-resistor and on the right is the rule for the spacing between the p-poly resistor with poly non-resistor.  
+![image](https://user-images.githubusercontent.com/87559347/188373209-ff1ed0ef-245b-427c-be09-ec419868828a.png)
+
+4. Run `tech load sky130A.tech` then `drc check` in tkcon to reload the tech file. The new DRC rules will now take effect.Notice the white dots on the poly indicating the design rule violations. Command `drc find` to iterate in each violations.  
+![image](https://user-images.githubusercontent.com/87559347/188373919-e9d1bd08-7c50-400a-9a17-65fa4296c82e.png)
+
 
 # DAY 4: Pre-layout timing analysis and importance of good clock tree
 
