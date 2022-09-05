@@ -503,7 +503,11 @@ Read through [this site about tech file](http://opencircuitdesign.com/magic/tech
 Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root)
 
 1. Download the [lab contents from this site](opencircuitdesign.com/open_pdks/archive/drc_tests.tgz). Extract the tarball. Inside the `drc_tests/` are the `.mag` layout files and the `sky130A.tech`.  
-2.
+
+2. Open magic with `poly.mag` as input: `magic poly.mag`. Focus on `Incorrect poly.9` layout. As described on the poly.9 [design rule of SKY130 PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#poly), the spacing between poly resistor with poly or diff/tap must at least be 0.480um. Using `:box`, we can see that the distance is 0.210um YET there is no DRC violations shown. Our goal is to fix the tech file to include that DRC.  
+
+![image](https://user-images.githubusercontent.com/87559347/188349085-beb1e625-ca3b-43da-9b95-d0f648c8eab2.png)
+
 
 
 # DAY 4: Pre-layout timing analysis and importance of good clock tree
