@@ -541,7 +541,7 @@ Use `grid` command inside the tkon terminal to match the tracks informations:
 
 ![image](https://user-images.githubusercontent.com/87559347/188419121-ce050fc7-6984-4266-9b24-47002934fc83.png)
 
-Below, we can see that the requirements are satisfied:  
+The grids will show where the routing for the local-interconnet layer can only happen where the distance of the lines are the pitch of the wire itself. Below, we can see that the guidelines are satisfied:  
 
 ![image](https://user-images.githubusercontent.com/87559347/183273195-485b64e0-fbb4-4c2b-85bf-6e578f7cc5df.png)
 
