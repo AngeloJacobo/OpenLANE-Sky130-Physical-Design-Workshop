@@ -84,9 +84,11 @@ Inside a specfic design folder contains a `config.tcl` which overrides the defau
 2. config.tcl in `Openlane/designs/[design]/`
 3. Default values in `Openlane/configuration/`
 
-#### Task for the Day 1 Lab: Find the flipflop ratio percentage for the design `picorv32a`. This is the ratio of the number of flip flops to the total number of cells
+
 
 ## Steps for the Lab:
+#### Task for the Day 1 Lab: Find the flipflop ratio percentage for the design `picorv32a`. This is the ratio of the number of flip flops to the total number of cells  
+
 **1. Run OpenLANE:**
  - `$ make mount` = Open the docker platform inside the `openlane/`
  - `% flow.tcl -interactive` = run script for automating the whole RTL to GDSII flow but in step by step `-interactive` mode
@@ -157,9 +159,11 @@ Placement is done on two stages:
  - Global Placement = placement with no legalizations and goal is to reduce wirelength. It uses Half Perimeter Wirelength (HPWL) reduction model. 
  - Detailed Placement = placement with legalization where the standard cells are placed on stadard rows, abutted, and must have no overlaps    
  
-#### Task for the Day 2 Lab: Find the area of the die
+
 
 ## Steps for the Lab:
+#### Task for the Day 2 Lab: Find the area of the die  
+
 **1. Set configuration variables.** Before running floorplan stage, the configuration variables or switches must be configured first. The configuration variables are on `openlane/configuration`:  
 
 ```
@@ -392,8 +396,7 @@ When polysilicon crosses N-diffusion/P-diffusion (diffusion is also called impla
 
 The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here is the process stack diagram](https://skywater-pdk.readthedocs.io/en/main/rules/assumptions.html) of sky130nm PDK. Metal 1 is for Power and Ground lines. `Nsubstratecontact` connects the N-well to locali. `licon` connects the locali to metal1.Locali is for local connections of cells. 
 
-The layer hierarchy for NMOS is: Psubstrate -> Psubstrate Diffusion (psd) -> Psubstrate Contact (psc) -> Local-interconnect (li) -> Mcon -> Metal1
-
+The layer hierarchy for NMOS is: Psubstrate -> Psubstrate Diffusion (psd) -> Psubstrate Contact (psc) -> Local-interconnect (li) -> Mcon -> Metal1. For poly: Poly -> Polycontact -> Locali. P-substrate diffusion an N-substrate diffusion is also referred to as P-tap and N-tap. 
 
 The output of the layout is the LEF file. [LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is used by the router tool in PnR design to get the location of standard cells pins to route them properly. So it is basically the abstract form of layout of a standard cell. `picorv32a/runs/[DATE]/tmp` contains the merged lef files (cell LEF and tech LEF). Notice how metal layer directon (horizontal or vertical) is alternating. Also, metal layer width and thickness is increasing. 
 
@@ -422,8 +425,8 @@ The output of the layout is the LEF file. [LEF (Library Exchange Format)](https:
 
 ## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 
-#### Task for the Day 3 Lab Part 1: Characterize a sample inverter cell by its slew rate and propagation delay.
 ## Steps for the Lab Part 1:
+#### Task for the Day 3 Lab Part 1: Characterize a sample inverter cell by its slew rate and propagation delay.  
 
 1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. Below are the contents of `vsdstdcelldesign/libs/`:
 ![image](https://user-images.githubusercontent.com/87559347/187333491-7fd10850-9f8a-486d-9d4c-a93f4002fdea.png)
@@ -496,9 +499,10 @@ Using this transient response, we will now characterize the cell's slew rate and
    - **D_f = 4.05364ns - 4.05001ns =0.00363ns**  
 ![image](https://user-images.githubusercontent.com/87559347/188261518-792d3e99-6a5a-423d-9309-62287c608ec0.png)
 
-#### Task for the Day 3 Lab Part 2: Characterize a sample inverter cell by its slew rate and propagation delay.
+
 ## Steps for the Lab Part 2:
-### Preparations:
+#### Task for the Day 3 Lab Part 2: Use Magic to fix incorrect DRCs of the tech file    
+
 Read through [this site about tech file](http://opencircuitdesign.com/magic/techref/maint2.html). All technology-specific information comes from a technology file. This file includes such information as layer types used, electrical connectivity between types, design rules, rules for mask generation, and rules for extracting netlists for circuit simulation. 
 Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root)
 
@@ -507,11 +511,18 @@ Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater
 2. Open magic with `poly.mag` as input: `magic poly.mag`. Focus on `Incorrect poly.9` layout. As described on the poly.9 [design rule of SKY130 PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#poly), the spacing between polyresistor with poly or diff/tap must at least be 0.480um. Using `:box`, we can see that the distance is 0.250um YET there is no DRC violations shown. Our goal is to fix the tech file to include that DRC.  
 ![image](https://user-images.githubusercontent.com/87559347/188370620-7e802ce0-cd15-4385-9b73-d8f5ee5fe8ae.png)
 
-3. Open `sky130A.tech`. The included rules for poly.9 are only for the spacing between the n-poly resistor with n-diffusion and the spacing between the p-poly resistor with diffusion. We will now add new rules for the spacing between the **poly resistor with poly non-resistor**, highlighted green below are the two added rules. On the left is the rule for spacing between n-poly resistor with poly non-resistor and on the right is the rule for the spacing between the p-poly resistor with poly non-resistor.  
+3. Open `sky130A.tech`. The included rules for poly.9 are only for the spacing between the n-poly resistor with n-diffusion and the spacing between the p-poly resistor with diffusion. We will now add new rules for the spacing between the **poly resistor with poly non-resistor**, highlighted green below are the two added rules. On the left is the rule for spacing between n-poly resistor with poly non-resistor and on the right is the rule for the spacing between the p-poly resistor with poly non-resistor. The `allpolynonres` is a macro under `alias` section of techfile. 
 ![image](https://user-images.githubusercontent.com/87559347/188374444-4999b439-40ab-42ae-91cd-91017c217f3e.png)
 
 4. Run `tech load sky130A.tech` then `drc check` in tkcon to reload the tech file. The new DRC rules will now take effect.Notice the white dots on the poly indicating the design rule violations. Command `drc find` to iterate in each violations.  
 ![image](https://user-images.githubusercontent.com/87559347/188373919-e9d1bd08-7c50-400a-9a17-65fa4296c82e.png)
+
+5. Next, notice below that there are violations between N-substrate diffusion with the polyresistors (from left: npolyres, ppolyres, xpolyres) which is good. But between npolyres with P-substrate diffusion, there is no violation shown. 
+![image](https://user-images.githubusercontent.com/87559347/188385207-0aaab2f8-0bc6-4ca3-8657-8043a5842dc1.png)
+
+6. To fix that, just modify the tech file to include not only the spacing between npolyres with nsubstratediffusion in poly.9 but between npolyres and `alldiff`. `alldif` is also a macro under `alias` section. Load the tech file again, the new DRC will now take effect.  
+![image](https://user-images.githubusercontent.com/87559347/188384339-225f2a84-8aca-44c6-b742-272448051fc9.png)  
+![image](https://user-images.githubusercontent.com/87559347/188384466-836a844e-79b4-4a86-bcc3-714b453ab4a6.png)
 
 
 # DAY 4: Pre-layout timing analysis and importance of good clock tree
