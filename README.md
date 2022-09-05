@@ -520,7 +520,7 @@ Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater
 5. Next, notice below that there are violations between N-substrate diffusion with the polyresistors (from left: npolyres, ppolyres, xpolyres) which is good. But between npolyres with P-substrate diffusion, there is no violation shown. 
 ![image](https://user-images.githubusercontent.com/87559347/188385207-0aaab2f8-0bc6-4ca3-8657-8043a5842dc1.png)
 
-6. To fix that, just modify the tech file to include not only the spacing between npolyres with nsubstratediffusion in poly.9 but between npolyres and `alldiff`. `alldif` is also a macro under `alias` section. Load the tech file again, the new DRC will now take effect.  
+6. To fix that, just modify the tech file to include not only the spacing between npolyres with N-substrate diffusion in poly.9 but between **npolyres and all types of diffusion**. `alldif` is also a macro under `alias` section. Load the tech file again, the new DRC will now take effect.  
 ![image](https://user-images.githubusercontent.com/87559347/188384339-225f2a84-8aca-44c6-b742-272448051fc9.png)  
 ![image](https://user-images.githubusercontent.com/87559347/188384466-836a844e-79b4-4a86-bcc3-714b453ab4a6.png)
 
