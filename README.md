@@ -531,11 +531,9 @@ To run previous flow, add tag to prep design:
 ```
 prep -design picorv32a -tag [date]
 ```
-
-
-Now that we have the layout of the cell, we need to make sure that: 
+PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries,power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is. So the next step is to extract the LEF file fro Magic. But first, we need to follow guidelines of the PnR for the standard cells:
  - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
- - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch (this is a PnR requirement).  
+ - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch 
  To check these requirements, we need to change the grid of the magic to match the real tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those information.   
 
 Use `grid` command inside the tkon terminal to match the above needed settings:  
