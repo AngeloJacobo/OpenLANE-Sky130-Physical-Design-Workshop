@@ -518,11 +518,11 @@ Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater
 ![image](https://user-images.githubusercontent.com/87559347/188373919-e9d1bd08-7c50-400a-9a17-65fa4296c82e.png)
 
 5. Next, notice below that there are violations between N-substrate diffusion with the polyresistors (from left: npolyres, ppolyres, xpolyres) which is good. But between npolyres with P-substrate diffusion, there is no violation shown. 
-![image](https://user-images.githubusercontent.com/87559347/188385207-0aaab2f8-0bc6-4ca3-8657-8043a5842dc1.png)
+![image](https://user-images.githubusercontent.com/87559347/188421029-0f94f6c8-8fc7-4aab-b895-05de5de40f7c.png)
 
 6. To fix that, just modify the tech file to include not only the spacing between npolyres with N-substrate diffusion in poly.9 but between **npolyres and all types of diffusion**. `alldif` is also a macro under `alias` section. Load the tech file again, the new DRC will now take effect.  
 ![image](https://user-images.githubusercontent.com/87559347/188384339-225f2a84-8aca-44c6-b742-272448051fc9.png)  
-![image](https://user-images.githubusercontent.com/87559347/188384466-836a844e-79b4-4a86-bcc3-714b453ab4a6.png)
+![image](https://user-images.githubusercontent.com/87559347/188421488-3d84c048-06b3-46ac-9816-513dd7c721f2.png)
 
 
 # DAY 4: Pre-layout timing analysis and importance of good clock tree
@@ -533,14 +533,15 @@ prep -design picorv32a -tag [date]
 ```
 PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries,power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is. So the next step is to extract the LEF file fro Magic. But first, we need to follow guidelines of the PnR for the standard cells:
  - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
- - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch 
- To check these requirements, we need to change the grid of the magic to match the real tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those information.   
+ - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch   
+ 
+ To check these guidelines, we need to change the grid of the magic to match the actual metal tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those metal informations.   
 
-Use `grid` command inside the tkon terminal to match the above needed settings:  
+Use `grid` command inside the tkon terminal to match the tracks informations:  
 
-![image](https://user-images.githubusercontent.com/87559347/183272925-3e0fb501-33e0-4cb8-9863-6c55f965b1d5.png)\
+![image](https://user-images.githubusercontent.com/87559347/188419121-ce050fc7-6984-4266-9b24-47002934fc83.png)
 
-Below, we can see that the requirement is satisfied:  
+Below, we can see that the requirements are satisfied:  
 
 ![image](https://user-images.githubusercontent.com/87559347/183273195-485b64e0-fbb4-4c2b-85bf-6e578f7cc5df.png)
 
