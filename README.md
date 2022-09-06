@@ -531,7 +531,7 @@ To run previous flow, add tag to prep design:
 ```
 prep -design picorv32a -tag [date]
 ```
-PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries,power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is. So the next step is to extract the LEF file fro Magic. But first, we need to follow guidelines of the PnR for the standard cells:
+PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries,power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) actually contains. So the next step is to extract the LEF file fro Magic. But first, we need to follow guidelines of the PnR for the standard cells:
  - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
  - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch   
  
@@ -545,9 +545,11 @@ The grids will show where the routing for the local-interconnet layer can only h
 
 ![image](https://user-images.githubusercontent.com/87559347/183273195-485b64e0-fbb4-4c2b-85bf-6e578f7cc5df.png)
 
-Next, we will extract the lef file. But before that I saved first the magfile with a new file name `save sky130_inv_new.mag`. Then type `lef write` on the tcon terminal. It will generate a lef file with same name as the magfile: `sky130_inv_new.lef`. Looking inside the lef file is:  
+Next, we will extract the LEF file. The LEF file contains the cell size,port definitions, and properties which aid the placer and router tool. With that, the ports definition, port class, and port use must be set first. The instructions to set these definitions via Magic are on the [vsdstdcelldesign repo](https://github.com/nickson-jose/vsdstdcelldesign). 
 
-![image](https://user-images.githubusercontent.com/87559347/183273517-743f4b0a-cbe7-47f0-a473-74d105d878b2.png)
+Next, save the mag file with a new filename `save sky130_myinverter.mag`. Then type `lef write` on the tcon terminal. It will generate a LEF file with same name as the magfile `sky130_myinverter.lef`. Inside that LEF file is:  
+
+![image](https://user-images.githubusercontent.com/87559347/188555080-03e4d472-9dcd-4c46-b0f0-7a37c952e5c3.png)
 
 ## Steps for plugging in the customized cell to OpenLANE
 
