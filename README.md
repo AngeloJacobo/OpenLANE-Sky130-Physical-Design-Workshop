@@ -553,9 +553,11 @@ Next, save the mag file with a new filename `save sky130_myinverter.mag`. Then t
 
 ## Steps for plugging in the customized cell to OpenLANE
 
-1. Copy the new lef file `sky130_inv_new.lef` and the libraries `sky130*.lib` inside the `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a.  
+Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) which contains the timing and power parameters for each cell needed in synthesis and STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). Provided inside the cloned `vsdstdcelldesign` are the liberty files for the customized inverter cell.
 
-![image](https://user-images.githubusercontent.com/87559347/183274773-9a56636f-f24f-4596-a831-3c2cd477a9f7.png)
+1. Copy the extracted lef file `sky130_myinverter.lef` and the liberty files `sky130*.lib` from `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a. Open the `sky130_fd_sc_hd__typical.lib` then change the cell name `sky130_vsdinv` to `sky130_myinverter` to match the LEF file cell name.
+
+![image](https://user-images.githubusercontent.com/87559347/188646711-c1715a14-7b55-40d5-90d0-cc1344577d3f.png)
 
 2. Add the folowing to `config.tcl` inside the picorv32a:    
 ```  
@@ -567,23 +569,23 @@ set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc
 set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
 ```
 
-The whole `config.tcl` is:  
+This sets the liberty file that will be used for synthesis (`LIB_SYNTH`) and for STA (fastest slowest, typical) and also the extra LEF files (location of the customized inverter cell). The whole `config.tcl` then is:  
 
-![image](https://user-images.githubusercontent.com/87559347/183275069-8400ccfa-5b1f-471f-993d-d58c47601fe3.png)
+![image](https://user-images.githubusercontent.com/87559347/188651745-66721b18-17e5-4b08-95aa-7a75a56ce747.png)
 
 
-2. Run docker and prepare the design. Then before running synthesis, plug first the new lef file to the OpenLANE flow via:  
+2. Run docker and prepare the design. Plug the new lef file to the OpenLANE flow via:  
 
 ```
 set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
 add_lefs -src $lefs
 ```  
 
-Below is the statistics report, and as we can see that `sky130_vsdinv` is really used on the design!  
+Then `run_synthesis`. Below is the statistics report, and as we can see `sky130_myinverter` is used on the design!  
 
-![image](https://user-images.githubusercontent.com/87559347/183275187-20f03e48-1790-4d37-b463-f58726dacc9d.png)
+![image](https://user-images.githubusercontent.com/87559347/188657588-5686cf61-4978-4842-bbf6-b0c01b111c12.png)
 
-However, notice that we are failing timing significantly,  
+However, llooking at the notice that we are failing timing significantly,  
 
 ![image](https://user-images.githubusercontent.com/87559347/183279413-1f9f4512-cb41-4e90-a611-19bea86ff6f0.png)
 
@@ -686,3 +688,10 @@ Zooming in:
  
 # Inquiries  
 Connect with me at my linkedin: https://www.linkedin.com/in/angelo-jacobo/
+
+
+
+
+
+
+
