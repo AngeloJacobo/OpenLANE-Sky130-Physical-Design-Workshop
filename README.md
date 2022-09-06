@@ -531,31 +531,36 @@ To run previous flow, add tag to prep design:
 ```
 prep -design picorv32a -tag [date]
 ```
-PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries,power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) actually contains. So the next step is to extract the LEF file fro Magic. But first, we need to follow guidelines of the PnR for the standard cells:
+## Extracting the LEF File
+PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries, power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) actually contains. So the next step is to extract the LEF file from Magic. But first, we need to follow guidelines of the PnR tool for the standard cells:
  - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
  - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch   
  
- To check these guidelines, we need to change the grid of the magic to match the actual metal tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those metal informations.   
+ To check these guidelines, we need to change the grid of Magic to match the actual metal tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those metal informations.   
 
-Use `grid` command inside the tkon terminal to match the tracks informations:  
+1. Use `grid` command inside the tkon terminal to match the tracks informations:  
 
 ![image](https://user-images.githubusercontent.com/87559347/188419121-ce050fc7-6984-4266-9b24-47002934fc83.png)
 
-The grids will show where the routing for the local-interconnet layer can only happen where the distance of the lines are the pitch of the wire itself. Below, we can see that the guidelines are satisfied:  
+The grids show where the routing for the local-interconnet layer can only happen, the distance of the grid lines are the required pitch of the wire. Below, we can see that the guidelines are satisfied:  
 
 ![image](https://user-images.githubusercontent.com/87559347/183273195-485b64e0-fbb4-4c2b-85bf-6e578f7cc5df.png)
 
-Next, we will extract the LEF file. The LEF file contains the cell size,port definitions, and properties which aid the placer and router tool. With that, the ports definition, port class, and port use must be set first. The instructions to set these definitions via Magic are on the [vsdstdcelldesign repo](https://github.com/nickson-jose/vsdstdcelldesign). 
+2. Next, we will extract the LEF file. The LEF file contains the cell size, port definitions, and properties which aid the placer and router tool. With that, the ports definition, port class, and port use must be set first. The instructions to set these definitions via Magic are on the [vsdstdcelldesign repo](https://github.com/nickson-jose/vsdstdcelldesign#create-port-definition). 
 
-Next, save the mag file with a new filename `save sky130_myinverter.mag`. Then type `lef write` on the tcon terminal. It will generate a LEF file with same name as the magfile `sky130_myinverter.lef`. Inside that LEF file is:  
+3. Next, save the mag file with a new filename `save sky130_myinverter.mag`. Then type `lef write` on the tcon terminal. It will generate a LEF file with same name as the magfile `sky130_myinverter.lef`. Inside that LEF file is:  
 
 ![image](https://user-images.githubusercontent.com/87559347/188555080-03e4d472-9dcd-4c46-b0f0-7a37c952e5c3.png)
 
-## Steps for plugging in the customized cell to OpenLANE
+## Plug-in the Customized Inverter Cell to OpenLANE
 
-Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) which contains the timing and power parameters for each cell needed in synthesis and STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). Timing and power parameter of a cell is obtained by simulating the cell in a variety of operating conditions (different corners) and these data are represented in the Lib file. Provided inside the cloned `vsdstdcelldesign` are the liberty files containing the customized inverter cell.
+Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) for SKY130 PDK which contains the timing and power parameters for each cell needed in STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). The library name `sky130_fd_sc_hd__ss_025C_1v80` describes the PVT corner as slow-slow (delay is maximum), 25° Celsius temperature, at 1.8V power supply. Timing and power parameter of a cell is obtained by simulating the cell in a variety of operating conditions (different corners) and these data are represented in the liberty file. 
 
-1. Copy the extracted lef file `sky130_myinverter.lef` and the liberty files `sky130*.lib` from `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a. Open the each liberty files then change the cell name `sky130_vsdinv` to `sky130_myinverter` to match the LEF file cell name.
+The liberty file characterizes all cells and is used by the ABC script during synthesis stage which maps the generic cells to the actual standard cells available in the liberty file.  
+
+Provided inside the cloned `vsdstdcelldesign` are the liberty files containing the customized inverter cell.
+
+1. Copy the extracted lef file `sky130_myinverter.lef` and the liberty files `sky130*.lib` from `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a. Open each liberty files then change the cell name `sky130_vsdinv` to `sky130_myinverter` to match the new LEF file cell name.
 
 ![image](https://user-images.githubusercontent.com/87559347/188646711-c1715a14-7b55-40d5-90d0-cc1344577d3f.png)
 
@@ -569,19 +574,19 @@ set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc
 set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
 ```
 
-This sets the liberty file that will be used for synthesis (`LIB_SYNTH`) and for STA (`_FASTEST`,`_SLOWEST`,`_TYPICAL`) and also the extra LEF files (location of the customized inverter cell). The whole `config.tcl` then is:  
+This sets the liberty file that will be used for ABC mapping of synthesis (`LIB_SYNTH`) and for STA (`_FASTEST`,`_SLOWEST`,`_TYPICAL`) and also the extra LEF files (`EXTRA_LEFS`) for the location of the customized inverter cell. The whole `config.tcl` then is:  
 
 ![image](https://user-images.githubusercontent.com/87559347/188651745-66721b18-17e5-4b08-95aa-7a75a56ce747.png)
 
 
-2. Run docker and prepare the design. Plug the new lef file to the OpenLANE flow via:  
+3. Run docker and prepare the design picorv32a. Plug the new lef file to the OpenLANE flow via:  
 
 ```
 set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
 add_lefs -src $lefs
 ```  
 
-Then `run_synthesis`. Below is the statistics report `runs/[date]/reports/synthesis/1-synthesis.AREA_0.stat.rpt`, and as we can see `sky130_myinverter` is  successfully included in the design!  
+4. Next `run_synthesis`. Below is the synthesis statistics report `runs/[date]/reports/synthesis/1-synthesis.AREA_0.stat.rpt` after the run, and as we can see `sky130_myinverter` cell is successfully included in the design!  
 
 ![image](https://user-images.githubusercontent.com/87559347/188657588-5686cf61-4978-4842-bbf6-b0c01b111c12.png)
 
