@@ -553,9 +553,9 @@ Next, save the mag file with a new filename `save sky130_myinverter.mag`. Then t
 
 ## Steps for plugging in the customized cell to OpenLANE
 
-Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) which contains the timing and power parameters for each cell needed in synthesis and STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). Provided inside the cloned `vsdstdcelldesign` are the liberty files for the customized inverter cell.
+Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) which contains the timing and power parameters for each cell needed in synthesis and STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). Timing and power parameter of a cell is obtained by simulating the cell in a variety of operating conditions (different corners) and these data are represented in the Lib file. Provided inside the cloned `vsdstdcelldesign` are the liberty files containing the customized inverter cell.
 
-1. Copy the extracted lef file `sky130_myinverter.lef` and the liberty files `sky130*.lib` from `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a. Open the `sky130_fd_sc_hd__typical.lib` then change the cell name `sky130_vsdinv` to `sky130_myinverter` to match the LEF file cell name.
+1. Copy the extracted lef file `sky130_myinverter.lef` and the liberty files `sky130*.lib` from `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a. Open the each liberty files then change the cell name `sky130_vsdinv` to `sky130_myinverter` to match the LEF file cell name.
 
 ![image](https://user-images.githubusercontent.com/87559347/188646711-c1715a14-7b55-40d5-90d0-cc1344577d3f.png)
 
@@ -569,7 +569,7 @@ set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc
 set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
 ```
 
-This sets the liberty file that will be used for synthesis (`LIB_SYNTH`) and for STA (fastest slowest, typical) and also the extra LEF files (location of the customized inverter cell). The whole `config.tcl` then is:  
+This sets the liberty file that will be used for synthesis (`LIB_SYNTH`) and for STA (`_FASTEST`,`_SLOWEST`,`_TYPICAL`) and also the extra LEF files (location of the customized inverter cell). The whole `config.tcl` then is:  
 
 ![image](https://user-images.githubusercontent.com/87559347/188651745-66721b18-17e5-4b08-95aa-7a75a56ce747.png)
 
@@ -581,14 +581,9 @@ set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
 add_lefs -src $lefs
 ```  
 
-Then `run_synthesis`. Below is the statistics report, and as we can see `sky130_myinverter` is used on the design!  
+Then `run_synthesis`. Below is the statistics report `runs/[date]/reports/synthesis/1-synthesis.AREA_0.stat.rpt`, and as we can see `sky130_myinverter` is  successfully included in the design!  
 
 ![image](https://user-images.githubusercontent.com/87559347/188657588-5686cf61-4978-4842-bbf6-b0c01b111c12.png)
-
-However, llooking at the notice that we are failing timing significantly,  
-
-![image](https://user-images.githubusercontent.com/87559347/183279413-1f9f4512-cb41-4e90-a611-19bea86ff6f0.png)
-
 
 
 ### About Delay Table
