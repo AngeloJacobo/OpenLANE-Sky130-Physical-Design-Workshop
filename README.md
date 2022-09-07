@@ -603,10 +603,13 @@ In order to avoid large skew between endpoints of a clock tree (signal arrives a
  ![image](https://user-images.githubusercontent.com/87559347/188773408-e503023f-0288-4993-a68a-5f20bccb886c.png)
 
 
-Buffers on different level will have different capacitive load and buffer size but as long as they are the same load and size on the same level, the skew will remain minimal. **This means different levels will have varying input transition and output capacitive load and thus varying delay.** 
+Buffers on different level will have different capacitive load and buffer size but as long as they are the same load and size on the same level, the total delay for each clock tree path will be the same thus skew will remain zero. **This means different levels will have varying input transition and output capacitive load and thus varying delay.** 
 
-Delay tables are used to capture the timing model of each cell and is included inside the liberty file. The main factor in delay is the output slew. The output slew in turn depends on **capacitive load** and **input slew**
+Delay tables are used to capture the timing model of each cell and is included inside the liberty file. The main factor in delay is the output slew. The output slew in turn depends on **capacitive load** and **input slew**. The input slew is a function of previous buffer's output cap load and input slew and it also has its own transition delay table.
 
+![image](https://user-images.githubusercontent.com/87559347/188783693-423bd170-dd0b-4f2f-9652-8fae9418df31.png)
+
+Notice how skew is zero since delay for both clock path is x9'+y15.
 
 Let us change some variables to minimize the negative slack. Use `echo $::env(SYNTH_STRATEGY) to view the current variables. The following are changed:
 
