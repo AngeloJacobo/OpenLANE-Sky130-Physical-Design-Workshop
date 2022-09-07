@@ -616,9 +616,7 @@ Delay tables are used to capture the timing model of each cell and is included i
 
 Notice how skew is zero since delay for both clock path is x9'+y15.
 
-Let us change some variables to minimize the negative slack. Use `echo $::env(SYNTH_STRATEGY) to view the current variables. The following are changed:
-
-
+Let us change some variables to minimize the negative slack. We will now change the variables "on the flight". Use `echo $::env(SYNTH_STRATEGY)` to view the current value of the variables before changing it:
 
 ```
 echo $::env(SYNTH_STRATEGY)
@@ -630,6 +628,7 @@ echo $::env(SYNTH_SIZING)
 0
 set ::env(SYNTH_SIZING) 1
 ```  
+`SYNTH_STRATEGY` of Delay 0 means focus on optimizng/minimizing the delay. `SYNTH_BUFFERING` of 1 ensures cell buffer will be used on high fanout cells to reduce delay due to high capacitance load. `SYNTH_SIZING` of 1 will enable cell sizing where cell will be upsize or downsized as needed to meet timing.
 
 Below is the area and also the negative slack. The area becomes bigger but slack is reduced to zero!  
 
@@ -714,8 +713,7 @@ Connect with me at my linkedin: https://www.linkedin.com/in/angelo-jacobo/
 
 
 
-STA 
-- no wire delay yet, only cell delay
- clk -> Q -> gates -> D ff
+STA  
+- no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
 
 
