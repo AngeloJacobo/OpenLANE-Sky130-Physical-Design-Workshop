@@ -556,7 +556,10 @@ The grids show where the routing for the local-interconnet layer can only happen
 
 Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) for SKY130 PDK which contains the timing and power parameters for each cell needed in STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). The library name `sky130_fd_sc_hd__ss_025C_1v80` describes the PVT corner as slow-slow (delay is maximum), 25° Celsius temperature, at 1.8V power supply. Timing and power parameter of a cell is obtained by simulating the cell in a variety of operating conditions (different corners) and these data are represented in the liberty file. 
 
-The liberty file characterizes all cells and is used by the ABC script during synthesis stage which maps the generic cells to the actual standard cells available in the liberty file.  
+The liberty file characterizes all cells and is used by the ABC script during synthesis stage which maps the generic cells to the actual standard cells available in the liberty file.  Same cell functionality but different sizes are available inside the library. As shown below, both are inverter cells but one with size-1 and another with size-4. Notice how size-4 inverter is simply four instances of size-1 inverter:
+
+![image](https://user-images.githubusercontent.com/87559347/188778191-1ca86454-98eb-4f95-8e1d-e5276a4edc40.png)
+
 
 Provided inside the cloned `vsdstdcelldesign` are the liberty files containing the customized inverter cell.
 
@@ -591,8 +594,19 @@ add_lefs -src $lefs
 ![image](https://user-images.githubusercontent.com/87559347/188657588-5686cf61-4978-4842-bbf6-b0c01b111c12.png)
 
 
-### About Delay Table
-Delay tables are used to find delay of each cell. In order to avoid large skew (signal arrives at different point in time), buffers on the same level must have same capacitive load to ensure same timing delay or latency on the same level. Same level buffers must also be the same size (since different buffer sizes pertains to different RC constant thus different delay and delay table).
+### About Delay Table  
+
+In order to avoid large skew between endpoints of a clock tree (signal arrives at different point in time):
+ - Buffers on the same level must have same capacitive load to ensure same timing delay or latency on the same level. 
+ - Buffers on the same level must also be the same size (different buffer sizes -> different W/L ratio -> different resistance -> different RC constant -> different delay).    
+ 
+ ![image](https://user-images.githubusercontent.com/87559347/188773408-e503023f-0288-4993-a68a-5f20bccb886c.png)
+
+
+Buffers on different level will have different capacitive load and buffer size but as long as they are the same load and size on the same level, the skew will remain minimal. **This means different levels will have varying input transition and output capacitive load and thus varying delay.** 
+
+Delay tables are used to capture the timing model of each cell and is included inside the liberty file. The main factor in delay is the output slew. The output slew in turn depends on **capacitive load** and **input slew**
+
 
 Let us change some variables to minimize the negative slack. Use `echo $::env(SYNTH_STRATEGY) to view the current variables. The following are changed:
 
