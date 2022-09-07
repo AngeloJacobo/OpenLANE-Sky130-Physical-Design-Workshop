@@ -579,7 +579,7 @@ set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/sr
 
 This sets the liberty file that will be used for ABC mapping of synthesis (`LIB_SYNTH`) and for STA (`_FASTEST`,`_SLOWEST`,`_TYPICAL`) and also the extra LEF files (`EXTRA_LEFS`) for the customized inverter cell. The whole `config.tcl` then is:  
 
-![image](https://user-images.githubusercontent.com/87559347/188651745-66721b18-17e5-4b08-95aa-7a75a56ce747.png)
+![image](https://user-images.githubusercontent.com/87559347/188798219-0b11e661-97f9-4960-b3a7-39aa43c19281.png)
 
 
 3. Run docker and prepare the design picorv32a. Plug the new lef file to the OpenLANE flow via:  
@@ -592,6 +592,11 @@ add_lefs -src $lefs
 4. Next `run_synthesis`. Below is the synthesis statistics report `runs/[date]/reports/synthesis/1-synthesis.AREA_0.stat.rpt` after the run, and as we can see `sky130_myinverter` cell is successfully included in the design!  
 
 ![image](https://user-images.githubusercontent.com/87559347/188657588-5686cf61-4978-4842-bbf6-b0c01b111c12.png)
+
+HOWEVER, looking  at the STA log `runs/[date]/logs/synthesis/sta.log`, we are not meeting timing. Our neext goal is to solve this negative slack:
+
+![image](https://user-images.githubusercontent.com/87559347/188801207-1972f34d-80cd-4178-ae3c-e8e49bc0d841.png)
+
 
 
 ### About Delay Table  
@@ -709,6 +714,8 @@ Connect with me at my linkedin: https://www.linkedin.com/in/angelo-jacobo/
 
 
 
-
+STA 
+- no wire delay yet, only cell delay
+ clk -> Q -> gates -> D ff
 
 
