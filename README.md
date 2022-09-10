@@ -638,7 +638,7 @@ Below is the log report for slack and area. The area becomes bigger (from 98492 
 
 Next, we do `run_floorplan` then check on magic the output layout BUT:  
 
-![image](https://user-images.githubusercontent.com/87559347/183292764-6684d384-2974-4069-b647-93121db3e496.png)
+![image](https://user-images.githubusercontent.com/87559347/189466107-b3c13af9-d01b-4033-8d9c-f83518c69ab8.png)
 
 Wth the help from the course tutors, the solution is to follow a manual approach to floorplan instead of using the wrapper `run_floorplan`. Below is the sequence of commands. :
 ```
@@ -722,5 +722,5 @@ Tech file `.tech` contains the metal layer, connectivity between layers, DRC rul
 
 LEF file is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
 
-
+DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs.
 
