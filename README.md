@@ -627,12 +627,14 @@ AREA 0
 % echo $::env(SYNTH_SIZING)
 0
 % set ::env(SYNTH_SIZING) 1
+% echo $::env(SYNTH_DRIVING_CELL)
+sky130_fd_sc_hd__inv_2
 ```  
-With `SYNTH_STRATEGY` of `Delay 0`, the tool will focus more on optimizing/minimizing the delay, index can be 0 to 3 where 3 is the most optimized for timing (sacrificing more area). `SYNTH_BUFFERING` of 1 ensures cell buffer will be used on high fanout cells to reduce delay due to high capacitance load. `SYNTH_SIZING` of 1 will enable cell sizing where cell will be upsize or downsized as needed to meet timing.
+With `SYNTH_STRATEGY` of `Delay 0`, the tool will focus more on optimizing/minimizing the delay, index can be 0 to 3 where 3 is the most optimized for timing (sacrificing more area). `SYNTH_BUFFERING` of 1 ensures cell buffer will be used on high fanout cells to reduce delay due to high capacitance load. `SYNTH_SIZING` of 1 will enable cell sizing where cell will be upsize or downsized as needed to meet timing. `SYNTH_DRIVING_CELL` is the cell used to drive the input ports and is vital for cells with a lot of fan-outs since it needs higher drive strength (larger driving cell needed).
 
-Below is the area and also the negative slack. The area becomes bigger but slack is reduced to zero!  
+Below is the log report for slack and area. The area becomes bigger (from 98492 to 103364) but no negative slack anymore (from -1.2ns to +0.35ns)!  
 
-![image](https://user-images.githubusercontent.com/87559347/183282096-63749738-c6e8-453e-8e1e-3858db8fd567.png)
+![image](https://user-images.githubusercontent.com/87559347/189464181-d8649d12-e4ef-4cb6-afab-8a305787dd72.png)
 
 Next, we do `run_floorplan` then check on magic the output layout BUT:  
 
@@ -715,5 +717,10 @@ Connect with me at my linkedin: https://www.linkedin.com/in/angelo-jacobo/
 
 STA  
 - no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
+
+Tech file `.tech` contains the metal layer, connectivity between layers, DRC rules, and other definitions needed by Magic layout tool to view a single cell.
+
+LEF file is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
+
 
 
