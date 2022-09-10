@@ -723,5 +723,5 @@ Tech file `.tech` contains the metal layer, connectivity between layers, DRC rul
 
 LEF file is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
 
-DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs.
+DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool.
 
