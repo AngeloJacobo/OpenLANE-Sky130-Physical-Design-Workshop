@@ -616,6 +616,8 @@ Delay tables are used to capture the timing model of each cell and is included i
 
 Notice how skew is zero since delay for both clock path is x9'+y15.
 
+### Fix Negative Slack
+
 Let us change some variables to minimize the negative slack. We will now change the variables "on the flight". Use `echo $::env(SYNTH_STRATEGY)` to view the current value of the variables before changing it:
 
 ```
@@ -636,21 +638,20 @@ Below is the log report for slack and area. The area becomes bigger (from 98492 
 
 ![image](https://user-images.githubusercontent.com/87559347/189464181-d8649d12-e4ef-4cb6-afab-8a305787dd72.png)
 
-Next, we do `run_floorplan` then check on magic the output layout BUT:  
+Next, we do `run_floorplan` then BUT:  
 
-![image](https://user-images.githubusercontent.com/87559347/189466107-b3c13af9-d01b-4033-8d9c-f83518c69ab8.png)
+![image](https://user-images.githubusercontent.com/87559347/189466107-b3c13af9-d01b-4033-8d9c-f83518c69ab8.png)  
 
-Wth the help from the course tutors, the solution is to follow a manual approach to floorplan instead of using the wrapper `run_floorplan`. Below is the sequence of commands. :
-```
-init_floorplan
-place_io
-global_placement_or
-detailed_placement
-tap_decap_or
-detailed_placement
-gen_pdn
-run_routing
-```
+The solution for this error is found on [this issue thread](https://github.com/The-OpenROAD-Project/OpenLane/issues/1307). `basic_macro_placement` command is failing since `EXTRA_LEFS` variable inside `config.tcl` is assumed as a macro which is not. The temporary solution is to comment call on `basic_macro_placement` inside the `OpenLane/scripts/tcl_commands/floorplan.tcl` (this is okay since we are not adding any macro to the design). 
+
+After that `run_placement`, another error will occur relating to `remove_buffers`, the solution is to comment the call to `remove_buffers_from_nets` in `OpenLane/scripts/tcl_commands/placement.tcl`. After successfully running placement, `runs/[date]/results/placement/picorv32.def` will be created. Search for instance of cell `sky130_myinverter` by grep `cat picorv32.def | grep sky130_myinverter`:  
+![image](https://user-images.githubusercontent.com/87559347/189475352-f74731e2-6ef8-4620-a3a9-16c31d326c82.png)
+
+
+Open the def file via magic: `magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &`. Select a single cell from listed above by commanding on tkon `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell is now placed on the core: 
+![image](https://user-images.githubusercontent.com/87559347/189475547-0ae137b4-9c8f-45ab-8071-1bb904fd8f40.png)
+
+
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
