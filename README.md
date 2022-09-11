@@ -648,10 +648,32 @@ After that `run_placement`, another error will occur relating to `remove_buffers
 ![image](https://user-images.githubusercontent.com/87559347/189475352-f74731e2-6ef8-4620-a3a9-16c31d326c82.png)
 
 
-Open the def file via magic: `magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &`. Select a single sky130_myinverter cell from listed above by commanding on tkon `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell sky130_myinverter is sucessfully placed on the core. Use `expand` on tkon to show the footprint of the cell and notice how the power and ground of sky130_myinverter overlaps the power and ground pins of its adjacent cells. 
-![image](https://user-images.githubusercontent.com/87559347/189475547-0ae137b4-9c8f-45ab-8071-1bb904fd8f40.png)
+Open the def file via magic: `magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &`. Select a single sky130_myinverter cell from listed above by commanding on tkon `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell sky130_myinverter is sucessfully placed on the core. Use `expand` on tkon to show the footprint of the cell and notice how the power and ground of sky130_myinverter overlaps the power and ground pins of its adjacent cells.  
+
+![image](https://user-images.githubusercontent.com/87559347/189507538-6d0c1b46-dc45-4768-b00c-01e8336ab518.png)
 
 
+
+### Timing Analysis (Pre-Layout STA using Ideal Clocks)
+Pre-layout STA will not yet include effects of clock buffers and net-delay due to RC parasitics (wire delay will be derived from PDK library wire model).    
+![image](https://user-images.githubusercontent.com/87559347/189510818-050c6b22-a319-4969-a23e-c82c57ebd4ff.png)  
+
+Setup timing analysis equation is:  
+```
+Θ < T - S - SU
+```  
+
+- Θ =  Combinational delay which includes clk to Q delay of launch flop and internal propagation delay of all gates between launch and capture flop  
+- T = Time period, also called the required time
+- S = Setup time. As demonstrated below, signal must settle on the middle (input of Mux 2) before clock tansists to 1 so the delay due to Mux 1 must be considered, this delay is the setup time. 
+![image](https://user-images.githubusercontent.com/87559347/189511212-8e1ea86f-b2d6-4a68-9948-7d9999087886.png)
+- SU = Setup uncertainty due to jitter which is temporary variation of clock period. This is due to non-idealities of PLL/clock source.
+
+
+
+STA  
+- no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
+jitter due to non-idealities of the PLL
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
@@ -715,13 +737,12 @@ Connect with me at my linkedin: https://www.linkedin.com/in/angelo-jacobo/
 
 
 
-
-STA  
-- no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
-
 Tech file `.tech` contains the metal layer, connectivity between layers, DRC rules, and other definitions needed by Magic layout tool to view a single cell.
 
 LEF file is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
 
 DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool.
+
+
+
 
