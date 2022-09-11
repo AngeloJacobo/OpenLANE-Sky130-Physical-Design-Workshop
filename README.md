@@ -669,7 +669,8 @@ Setup timing analysis equation is:
 ![image](https://user-images.githubusercontent.com/87559347/189511212-8e1ea86f-b2d6-4a68-9948-7d9999087886.png)
 - SU = Setup uncertainty due to jitter which is temporary variation of clock period. This is due to non-idealities of PLL/clock source.
 
-
+### Pre-Layout STA with OpenSTA
+[SDA file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) specifies timing constraints of the design.
 
 STA  
 - no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
@@ -744,5 +745,6 @@ LEF file is divided to tech lef which contains metal layer geometries and cell l
 DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool.
 
 
-
+As seen in delay table, delay depends on input slew and ouput load capatiance. To reduce delay, focus on large slew and cap. As seen below, higher fanouts means larger load caps thus larger slew
+Load cap will not change but we can change cell size to better drive that large cap load for less delay
 
