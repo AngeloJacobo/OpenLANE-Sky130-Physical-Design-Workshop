@@ -676,15 +676,14 @@ Run STA engine using openroad, run openroad first then source `/openlane/scripts
 ![image](https://user-images.githubusercontent.com/87559347/189568030-f442a238-21e8-4fc1-b5d0-22de00b11af9.png)
 
 ### SDC File
-- all_inputs = all input port of top level of design
-- all_output = all output ports of top level of design
-[I/Os of the top-level block are called port, I/Os of the subblocks are called pin.](https://electronics.stackexchange.com/questions/339401/get-ports-vs-get-pins-vs-get-nets-vs-get-registers).  
+
+
 
 - [create_clock](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/create_clock_sdc_constraint.htm)
 ```
 create_clock clk  -name sys_clk  -period 10
 ```
-This creates a clock named `sys_clk` to the port `clk` with period of 10ns. However, it is recommended to add `get_ports` when referencing a port to not confuse the object type (is it a clk, net, or port?):  
+This creates a clock named `sys_clk` to the port `clk` with period of 10ns. However, it is recommended to add `get_ports` when referencing a port to not confuse the object type (is it a clk, net, or port?):
 ```
 create_clock [get_ports clk]  -name sys_clk  -period 10
 ```
@@ -710,18 +709,24 @@ set_driving_cell -lib_cell sky130_fd_sc_hd__inv_8 -pin Y clk
 ```
 The first constraint sets `sky130_fd_sc_hd__inv_2` (specifically pin `Y` of the cell) to drive all input ports except `clk`. The second consraint sets `sky130_fd_sc_hd__inv_8` (specifically pin 'Y' of this cell) for the driving the clk input port.
 
-[Here is a great reference](https://hdvacademy.blogspot.com/2014/07/design-constraints.html) for some common SDC constraints.
 
-
-- [set_load] = Seta the capacitive load on output ports or nets 
+- set_load = Below constraint sets a 10nF capacitive load to all output ports. set_load can also be used on internal net.
 ```
 set_load 10 [all_outputs]
 ```
-This sets a 10nF load on all output ports.
 
-- set_clock_uncertainty = Incorporates jitter for possible variances in the clock.
-- set_clock_transition = 
-- set_timing_derate = 
+- set_clock_uncertainty = Below constraint incorporates 0.25ns skew to `clk`
+```
+set_clock_uncertainty 0.25 [get_clock clk]
+```
+
+- [set_clock_transition](https://www.micro-ip.com/tw/Synopsys(DC)/dictionary_37_8/set_clock_transition.html) = Sets both rise and fall transition times to 0.15ns on clock pins of all sequential elements clocked by `clk`:
+```
+set_clock_transition 0.15 [get_clocks clk]
+
+```
+[Here](https://hdvacademy.blogspot.com/2014/07/design-constraints.html) and [here](https://www.micro-ip.com/tw/drchip.php?mode=2&cid=8) is a great reference for some common SDC constraints. As a side note, [as said here](https://electronics.stackexchange.com/questions/339401/get-ports-vs-get-pins-vs-get-nets-vs-get-registers) I/Os of the top-level block are called port while I/Os of the subblocks are called pin.
+
 STA  
 - no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
 jitter due to non-idealities of the PLL
