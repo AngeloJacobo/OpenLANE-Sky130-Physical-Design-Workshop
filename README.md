@@ -670,7 +670,32 @@ Setup timing analysis equation is:
 - SU = Setup uncertainty due to jitter which is temporary variation of clock period. This is due to non-idealities of PLL/clock source.
 
 ### Pre-Layout STA with OpenSTA
-[SDA file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) specifies timing constraints of the design.
+STA can either be **single corner** which only uses the `LIB_TYPICAL` library which is used in pre-layout(pos-synthesis) STA or **multicorner** which uses `LIB_SLOWEST`(setup analysis, high temp low voltage),`LIB_FASTEST`(hold analysis, low temp high voltage), and `LIB_TYPICAL` libraries. `
+
+Run STA engine using openroad, run openroad first then source `/openlane/scripts/openroad/sta.tcl` which contains the comands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the timing constraints of the design. The result of running STA in openroad will be exactly the same as the log result of STA after running `run_synthesis`.  
+![image](https://user-images.githubusercontent.com/87559347/189568030-f442a238-21e8-4fc1-b5d0-22de00b11af9.png)
+
+### SDC File
+- all_inputs = all input port of top level of design
+- all_output = all output ports of top level of design
+[I/Os of the top-level block are called port, I/Os of the subblocks are called pin.](https://electronics.stackexchange.com/questions/339401/get-ports-vs-get-pins-vs-get-nets-vs-get-registers).  
+
+- [create_clock](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/create_clock_sdc_constraint.htm)
+```
+create_clock clk  -name sys_clk  -period 10
+```
+This creates a clock named `sys_clk` to the port `clk` with period of 10ns. However, it is recommended to add `get_ports` when referencing a port to not confuse the objeect type (is it a clk, net, or port):  
+```
+create_clock [get_ports clk]  -name sys_clk  -period 10
+```
+
+ - [set_input_delay](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/set_input_delay_%28sdc_input_delay_constraint%29.htm)
+ Defines the arrival time of an input relative to a clock.
+ ```
+ set_input_delay 1 -clock [get_clock clk] [all_input]
+ ```
+ This adds a delay of 1ns to all input ports relative to `clk`.
+
 
 STA  
 - no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
