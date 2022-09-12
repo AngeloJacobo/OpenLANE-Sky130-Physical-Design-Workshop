@@ -684,18 +684,33 @@ Run STA engine using openroad, run openroad first then source `/openlane/scripts
 ```
 create_clock clk  -name sys_clk  -period 10
 ```
-This creates a clock named `sys_clk` to the port `clk` with period of 10ns. However, it is recommended to add `get_ports` when referencing a port to not confuse the objeect type (is it a clk, net, or port):  
+This creates a clock named `sys_clk` to the port `clk` with period of 10ns. However, it is recommended to add `get_ports` when referencing a port to not confuse the object type (is it a clk, net, or port?):  
 ```
 create_clock [get_ports clk]  -name sys_clk  -period 10
 ```
 
- - [set_input_delay](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/set_input_delay_%28sdc_input_delay_constraint%29.htm)
- Defines the arrival time of an input relative to a clock.
+ - [set_input_delay](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/set_input_delay_%28sdc_input_delay_constraint%29.htm)/[set_output_delay](https://www.intel.com/content/www/us/en/docs/programmable/683432/21-4/tcl_pkg_sdc_ver_1-5_cmd_set_output_delay.html) = Defines the arrival/exit time of an input/output signal relative to the input clock. This is the delay of the signal coming from an external block and internal delay of the signal to be propagated to external ports.
+ 
  ```
  set_input_delay 1 -clock [get_clock clk] [all_input]
+ set_output_delay 0.5 -clock [get_clock clk] [all_output]
  ```
- This adds a delay of 1ns to all input ports relative to `clk`.
+ This adds a delay of 1ns relative to `clk` to all signals going to input ports, and delay of 0.5ns relative to `clk` to all signals going to output ports.
 
+
+ - [set_max_fanout](https://hdvacademy.blogspot.com/2014/07/design-constraints.html) = below constraint specifies a max fanout of 10 for all output ports in the design
+ ```
+ set_max_fanout 10 [current_design]
+ ```
+- [set_driving_cell](https://www.micro-ip.com/tw/STA/dictionary_516_17/set_driving_cell.html) = Models an external driver at the input port of the current design 
+
+```
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_2 -pin Y $all_inputs_wo_clk_rst
+set_driving_cell -lib_cell sky130_fd_sc_hd__inv_8 -pin Y clk
+```
+The first constraint sets `sky130_fd_sc_hd__inv_2` (specifically pin `Y` of the cell) to drive all input ports except `clk`. The second consraint sets `sky130_fd_sc_hd__inv_8` (specifically pin 'Y' of this cell) for the driving the clk input port.
+
+[Here is a great reference](https://hdvacademy.blogspot.com/2014/07/design-constraints.html) for some common SDC constraints.
 
 STA  
 - no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
