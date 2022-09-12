@@ -672,11 +672,13 @@ Setup timing analysis equation is:
 ### Pre-Layout STA with OpenSTA
 STA can either be **single corner** which only uses the `LIB_TYPICAL` library which is used in pre-layout(pos-synthesis) STA or **multicorner** which uses `LIB_SLOWEST`(setup analysis, high temp low voltage),`LIB_FASTEST`(hold analysis, low temp high voltage), and `LIB_TYPICAL` libraries. `
 
-Run STA engine using openroad, run openroad first then source `/openlane/scripts/openroad/sta.tcl` which contains the comands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the timing constraints of the design. The result of running STA in openroad will be exactly the same as the log result of STA after running `run_synthesis`.  
+Run STA engine using openroad, run openroad first then source `/openlane/scripts/openroad/sta.tcl` which contains the comands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the timing constraints of the design. 
 ![image](https://user-images.githubusercontent.com/87559347/189568030-f442a238-21e8-4fc1-b5d0-22de00b11af9.png)
 
-![image](https://user-images.githubusercontent.com/87559347/189677568-633ade9f-32ed-4da8-969a-7f9a5c28d0a4.png)
+The result of running STA in openroad will be exactly the same as the log result of STA after running `run_synthesis`.  
+![image](https://user-images.githubusercontent.com/87559347/189686801-46a9fb96-9be6-40c7-b62a-da3160489cb0.png)
 
+To reduce negative slack, focus on large delays. Notice how net `_02682_` has big fanout of 5. Use `report_net -connections _02682_` to display connections. First thing we can do is to go back to openlane and reduce fanouts by `set ::env(SYNTH_MAX_FANOUT) 4` then `run_synthesis` again. 
 ### SDC File Parameters
 
 - [create_clock](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/create_clock_sdc_constraint.htm)
