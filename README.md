@@ -675,9 +675,9 @@ STA can either be **single corner** which only uses the `LIB_TYPICAL` library wh
 Run STA engine using openroad, run openroad first then source `/openlane/scripts/openroad/sta.tcl` which contains the comands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the timing constraints of the design. The result of running STA in openroad will be exactly the same as the log result of STA after running `run_synthesis`.  
 ![image](https://user-images.githubusercontent.com/87559347/189568030-f442a238-21e8-4fc1-b5d0-22de00b11af9.png)
 
-### SDC File
+![image](https://user-images.githubusercontent.com/87559347/189677568-633ade9f-32ed-4da8-969a-7f9a5c28d0a4.png)
 
-
+### SDC File Parameters
 
 - [create_clock](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/create_clock_sdc_constraint.htm)
 ```
