@@ -712,6 +712,16 @@ The first constraint sets `sky130_fd_sc_hd__inv_2` (specifically pin `Y` of the 
 
 [Here is a great reference](https://hdvacademy.blogspot.com/2014/07/design-constraints.html) for some common SDC constraints.
 
+
+- [set_load] = Seta the capacitive load on output ports or nets 
+```
+set_load 10 [all_outputs]
+```
+This sets a 10nF load on all output ports.
+
+- set_clock_uncertainty = Incorporates jitter for possible variances in the clock.
+- set_clock_transition = 
+- set_timing_derate = 
 STA  
 - no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
 jitter due to non-idealities of the PLL
