@@ -670,22 +670,29 @@ Setup timing analysis equation is:
 - SU = Setup uncertainty due to jitter which is temporary variation of clock period. This is due to non-idealities of PLL/clock source.
 
 ### Pre-Layout STA with OpenSTA
-STA can either be **single corner** which only uses the `LIB_TYPICAL` library which is used in pre-layout(pos-synthesis) STA or **multicorner** which uses `LIB_SLOWEST`(setup analysis, high temp low voltage),`LIB_FASTEST`(hold analysis, low temp high voltage), and `LIB_TYPICAL` libraries. `
+STA can either be **single corner** which only uses the `LIB_TYPICAL` library which is the one used in pre-layout(pos-synthesis) STA or **multicorner** which uses `LIB_SLOWEST`(setup analysis, high temp low voltage),`LIB_FASTEST`(hold analysis, low temp high voltage), and `LIB_TYPICAL` libraries. 
 
-Run STA engine using openroad, run openroad first then source `/openlane/scripts/openroad/sta.tcl` which contains the comands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the timing constraints of the design. 
+Run STA engine using openroad, run openroad first then source `/openlane/scripts/openroad/sta.tcl` which contains the commands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the timing constraints of the design. 
 ![image](https://user-images.githubusercontent.com/87559347/189568030-f442a238-21e8-4fc1-b5d0-22de00b11af9.png)
 
-The result of running STA in openroad will be exactly the same as the log result of STA after running `run_synthesis`.  
+The result of running STA in openroad will be exactly the same as the log result of STA after running `run_synthesis`. Observe the delay:
 ![image](https://user-images.githubusercontent.com/87559347/189686801-46a9fb96-9be6-40c7-b62a-da3160489cb0.png)
 
-To reduce negative slack, focus on large delays. Notice how net `_02682_` has big fanout of 5. Use `report_net -connections _02682_` to display connections. First thing we can do is to go back to openlane and reduce fanouts by `set ::env(SYNTH_MAX_FANOUT) 4` then `run_synthesis` again. As shwon below, wns is reduced from -1.35ns to -0.82ns.  
+To reduce negative slack, focus on large delays. Notice how net `_02682_` has big fanout of 5. Use `report_net -connections _02682_` to display connections. First thing we can do is to go back to openlane and reduce fanouts by `set ::env(SYNTH_MAX_FANOUT) 4` then `run_synthesis` again. As shown below, wns is reduced from -1.35ns to -0.82ns.  
 ![image](https://user-images.githubusercontent.com/87559347/189788023-9f6d85a9-a769-4b54-b156-2fa7b8980178.png)
 
-We can also try changing the cell size  
+To further reduce the negative slack, we can also try changing the sizes of cell with high fanout so bigger driver will be used. As shown below, cell `_41882_` has a high cap load of 0.04nF and this causes a large delay due to `buf_1` not having enough drive strength to drive that high cap load. We can try upsizing the `buf_1` to `buf_4` (listed on the used liberty files are all cells which you can choose) inside OpenSTA: `replace_cell _41882_ sky130_fd_sc_hd__buf_4` 
 ![image](https://user-images.githubusercontent.com/87559347/189793281-6acff965-b4d1-48a8-a6c3-17d312f901a2.png)
+This can be done iteratively until desired slack is reached, this is called timing ECO (Engineering Change Order).  
 
-### OpenSTA Commands
-
+#### Summary of OpenSTA Commands  
+```
+report_net -connections _02682_
+report_checks -fields {cap slew nets} -digits 4
+report_checks -from _18671_ -to _18739_ -fields {cap slew nets} -digits 4
+report_wns
+report_tns
+```
 
 ### SDC File Parameters
 
