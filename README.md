@@ -681,17 +681,19 @@ The result of running STA in openroad will be exactly the same as the log result
 To reduce negative slack, focus on large delays. Notice how net `_02682_` has big fanout of 5. Use `report_net -connections _02682_` to display connections. First thing we can do is to go back to openlane and reduce fanouts by `set ::env(SYNTH_MAX_FANOUT) 4` then `run_synthesis` again. As shown below, wns is reduced from -1.35ns to -0.82ns.  
 ![image](https://user-images.githubusercontent.com/87559347/189788023-9f6d85a9-a769-4b54-b156-2fa7b8980178.png)
 
-To further reduce the negative slack, we can also try changing the sizes of cell with high fanout so bigger driver will be used. As shown below, cell `_41882_` has a high cap load of 0.04nF and this causes a large delay due to `buf_1` not having enough drive strength to drive that high cap load. We can try upsizing the `buf_1` to `buf_4` (listed on the used liberty files are all cells which you can choose) inside OpenSTA: `replace_cell _41882_ sky130_fd_sc_hd__buf_4` 
+To further reduce the negative slack, we can also try upsizing the cell with high fanout so bigger driver will be used. High fanout results in high load cap which then results in high delay. But since we cannot change the load cap, we can just change the cell size to better drive that large cap load for less delay. As shown below, cell `_41882_` has a high cap load of 0.04nF and this causes a large delay due to `buf_1` not having enough drive strength to drive that high cap load. We can try upsizing the `buf_1` to `buf_4` (listed on the used liberty files are all cells which you can choose) inside OpenSTA: `replace_cell _41882_ sky130_fd_sc_hd__buf_4` 
 ![image](https://user-images.githubusercontent.com/87559347/189793281-6acff965-b4d1-48a8-a6c3-17d312f901a2.png)
 This can be done iteratively until desired slack is reached, this is called timing ECO (Engineering Change Order).  
 
 #### Summary of OpenSTA Commands  
 ```
 report_net -connections _02682_
+replace_cell _41882_ sky130_fd_sc_hd__buf_4`
 report_checks -fields {cap slew nets} -digits 4
 report_checks -from _18671_ -to _18739_ -fields {cap slew nets} -digits 4
 report_wns
 report_tns
+report_worst_slack -max
 ```
 
 ### SDC File Parameters
@@ -744,9 +746,8 @@ set_clock_transition 0.15 [get_clocks clk]
 ```
 [Here](https://hdvacademy.blogspot.com/2014/07/design-constraints.html) and [here](https://www.micro-ip.com/tw/drchip.php?mode=2&cid=8) is a great reference for some common SDC constraints. As a side note, [as said here](https://electronics.stackexchange.com/questions/339401/get-ports-vs-get-pins-vs-get-nets-vs-get-registers) I/Os of the top-level block are called port while I/Os of the subblocks are called pin.
 
-STA  
-- no wire delay yet: clk-to-Q delay -> gates propagation delays -> D-input
-jitter due to non-idealities of the PLL
+### CTS
+In order to have minimum skew between clock endpoints, clock tree is used. This results in equal wirelength for every path. This only solves the skew and there is still the problem with wire resistance and capacitance resulting in signal at clock endpoint to be not the same with the original clock. This can be solved by clock buffers. Clock buffer differs in regular cell buffers since clock buffers has equal rise and fall time.
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
