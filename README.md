@@ -755,9 +755,27 @@ There are three parameters that we need to consider when building a clock tree:
 
 ![image](https://user-images.githubusercontent.com/87559347/190031283-3bc25c79-f622-4b58-a448-95982d32612d.png)
 
+### Lab
 After extracting the modified verilog netlist after doing timing ECO, `run_floorplan` and `run_placement` and then `run_cts`. In CTS, the verilog netlist is modified to add the clock buffers and this new verilog netlist is saved under `/runs/[date]/results/cts/`.
 
  `run_cts` and the other Openlane commands are actually just calling the tcl proc (procedure) inside `/OpenLane/scripts/tcl_commands/`. This tcl procedure will then call Openroad to run the actual tool. For example, `run_cts` can be found inside `/OpenLane/scripts/tcl_commands/cts.tcl`, this tcl procedure will call Openroad and will call `/OpenLane/scripts/openroad/cts.tcl` which contains the Openroad commands to run TritonCTS.
+
+Inside the `/OpenLane/scripts/openroad/cts.tcl` contains the configuration variables for CTS. Notables ones are:
+- `CTS_CLK_BUFFER_LIST` = list of clock branch buffers (`sky130_fd_sc_hd__clkbuf_8` `sky130_fd_sc_hd__clkbuf_4` `sky130_fd_sc_hd__clkbuf_2`)
+- `CTS_ROOT_BUFFER` = clock buffer used for the root of the clock tree and is the biggest clock buffer to drive the clock tree of the whole chip (`sky130_fd_sc_hd__clkbuf_16`)
+- `CTS_MAX_CAP` = maximum capacitance of the output port of the root clock buffer.
+
+Time period doe snot matter in hold analysis
+
+### Timing Analysis with Real Clocks
+Setup and hold analysis with real clock will now include clock buffer delays:
+- In setup analysis, the point is that the data must arrive first before the clock rising edge to properly latch that data. Setup violation happens when path is slow. This is affected by parameters such as combinational delay, clock buffer delay, time period, setup time, and setup uncertainty (jitter).
+
+- Hold analysis is the delay that the MUX2 model inside the flip flop needs to move the data to outside. This is the time that the launch flop must hold the data before it reaches the capture flop. Hold analysis is done on the same rising clock edge for launch and capture flop unlike in setup analysis where it spans between two rising clock edges. Hold violation happens when path is too fast. This is affected by parameters such as combinational delay, clock buffer delays, and hold time.
+The goal is to have a positive slack on both setup and hold analysis  
+
+![image](https://user-images.githubusercontent.com/87559347/190176094-9a915280-8a87-4acc-b3c0-69344ab944ec.png)
+
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
