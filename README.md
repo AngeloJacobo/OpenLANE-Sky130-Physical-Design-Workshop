@@ -683,7 +683,7 @@ To reduce negative slack, focus on large delays. Notice how net `_02682_` has bi
 
 To further reduce the negative slack, we can also try upsizing the cell with high fanout so bigger driver will be used. High fanout results in high load cap which then results in high delay. But since we cannot change the load cap, we can just change the cell size to better drive that large cap load for less delay. As shown below, cell `_41882_` has a high cap load of 0.04nF and this causes a large delay due to `buf_1` not having enough drive strength to drive that high cap load. We can try upsizing the `buf_1` to `buf_4` (listed on the used liberty files are all cells which you can choose) inside OpenSTA: `replace_cell _41882_ sky130_fd_sc_hd__buf_4` 
 ![image](https://user-images.githubusercontent.com/87559347/189793281-6acff965-b4d1-48a8-a6c3-17d312f901a2.png)
-This can be done iteratively until desired slack is reached, this is called timing ECO (Engineering Change Order).  
+This can be done iteratively until desired slack is reached, this is called timing ECO (Engineering Change Order). To extract the modified verilog netlist: `write_verilog designs/picorv32a/runs/RUN_2022.09.14_05.18.35/results/synthesis/picorv32.v`. Beware that upsizing the cell will naturally increase core size. 
 
 #### Summary of OpenSTA Commands  
 ```
@@ -694,6 +694,7 @@ report_checks -from _18671_ -to _18739_ -fields {cap slew nets} -digits 4
 report_wns
 report_tns
 report_worst_slack -max
+write_verilog designs/picorv32a/runs/RUN_2022.09.14_05.18.35/results/synthesis/picorv32.v
 ```
 
 ### SDC File Parameters
@@ -754,6 +755,9 @@ There are three parameters that we need to consider when building a clock tree:
 
 ![image](https://user-images.githubusercontent.com/87559347/190031283-3bc25c79-f622-4b58-a448-95982d32612d.png)
 
+After extracting the modified verilog netlist after doing timing ECO, `run_floorplan` and `run_placement` and then `run_cts`. In CTS, the verilog netlist is modified to add the clock buffers and this new verilog netlist is saved under `/runs/[date]/results/cts/`.
+
+ `run_cts` and the other Openlane commands are actually just calling the tcl proc (procedure) inside `/OpenLane/scripts/tcl_commands/`. This tcl procedure will then call Openroad to run the actual tool. For example, `run_cts` can be found inside `/OpenLane/scripts/tcl_commands/cts.tcl`, this tcl procedure will call Openroad and will call `/OpenLane/scripts/openroad/cts.tcl` which contains the Openroad commands to run TritonCTS.
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
@@ -821,7 +825,7 @@ Tech file `.tech` contains the metal layer, connectivity between layers, DRC rul
 
 LEF file is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
 
-DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool.
+DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool (e.g. CTS must first read DEF file from placement stage).  
 
 
 As seen in delay table, delay depends on input slew and ouput load capatiance. To reduce delay, focus on large slew and cap. As seen below, higher fanouts means larger load caps thus larger slew
