@@ -775,7 +775,7 @@ Setup and hold analysis with real clock will now include clock buffer delays:
 
 The goal is to have a positive slack on both setup and hold analysis.
 
-![image](https://user-images.githubusercontent.com/87559347/190183335-fc20002a-b80b-4b86-ad0a-3db65a0b49c7.png)
+![image](https://user-images.githubusercontent.com/87559347/190187336-22900fef-6105-4aee-b6ac-6aae6c5cb54c.png)
 
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
