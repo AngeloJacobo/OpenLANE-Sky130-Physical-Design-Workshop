@@ -771,10 +771,11 @@ Time period doe snot matter in hold analysis
 Setup and hold analysis with real clock will now include clock buffer delays:
 - In setup analysis, the point is that the data must arrive first before the clock rising edge to properly latch that data. Setup violation happens when path is slow. This is affected by parameters such as combinational delay, clock buffer delay, time period, setup time, and setup uncertainty (jitter).
 
-- Hold analysis is the delay that the MUX2 model inside the flip flop needs to move the data to outside. This is the time that the launch flop must hold the data before it reaches the capture flop. Hold analysis is done on the same rising clock edge for launch and capture flop unlike in setup analysis where it spans between two rising clock edges. Hold violation happens when path is too fast. This is affected by parameters such as combinational delay, clock buffer delays, and hold time.
-The goal is to have a positive slack on both setup and hold analysis  
+- Hold analysis is the delay that the MUX2 model inside the flip flop needs to move the data to outside. This is the time that the launch flop must hold the data before it reaches the capture flop. Hold analysis is done on the same rising clock edge for launch and capture flop unlike in setup analysis where it spans between two rising clock edges. Hold violation happens when path is too fast. This is affected by parameters such as combinational delay, clock buffer delays, and hold time. (time period and setup uncertainty does not matter since launch and capture flops will receive the same rising clock edges fo hold analysis)
 
-![image](https://user-images.githubusercontent.com/87559347/190176094-9a915280-8a87-4acc-b3c0-69344ab944ec.png)
+The goal is to have a positive slack on both setup and hold analysis.
+
+![image](https://user-images.githubusercontent.com/87559347/190183335-fc20002a-b80b-4b86-ad0a-3db65a0b49c7.png)
 
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
