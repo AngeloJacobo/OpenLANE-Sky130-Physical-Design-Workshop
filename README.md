@@ -774,8 +774,16 @@ Setup and hold analysis with real clock will now include clock buffer delays:
 - Hold analysis is the delay that the MUX2 model inside the flip flop needs to move the data to outside. This is the time that the launch flop must hold the data before it reaches the capture flop. Hold analysis is done on the same rising clock edge for launch and capture flop unlike in setup analysis where it spans between two rising clock edges. Hold violation happens when path is too fast. This is affected by parameters such as combinational delay, clock buffer delays, and hold time. (time period and setup uncertainty does not matter since launch and capture flops will receive the same rising clock edges fo hold analysis)
 
 The goal is to have a positive slack on both setup and hold analysis.
+![image](https://user-images.githubusercontent.com/87559347/190183335-fc20002a-b80b-4b86-ad0a-3db65a0b49c7.png)  
 
-![image](https://user-images.githubusercontent.com/87559347/190196793-06f9d58a-3c00-47f9-9164-b96a3d2f3c41.png)
+STA result for hold analysis (min path):
+![image](https://user-images.githubusercontent.com/87559347/190203192-566f344e-b275-45de-af80-4058e1b34d31.png)
+
+STA result for setup analysis (max path):
+![image](https://user-images.githubusercontent.com/87559347/190202789-c79cd727-ebe3-4bc5-8fdc-a0f4dce77dba.png)
+
+
+
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
