@@ -831,9 +831,15 @@ Today we will do generation of power distribution network. After running `gen_pd
 
 ![image](https://user-images.githubusercontent.com/87559347/183293313-adc46bad-0e2e-4bcf-a2fb-2e2e5b6a43b7.png)
 
-Next is routing. One simple algorithm for routing is Maze Routing or Lee's routing. The shortest path is one that follows a steady increment of one (1-to-12 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends. 
 
+### Maze Routing
+One simple routing algorithm is Maze Routing or Lee's routing:
+- The shortest path is one that follows a steady increment of one (1-to-12 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends. The route should not be diagonal and must not overlap an obstruction such as macros. 
+- This algorithm however has high run time and consume a lot of memory thus more optimized routing algorithm is preferred (but the principles stays the same where route with shortest path and less bends is preferred)  
 ![image](https://user-images.githubusercontent.com/87559347/183368014-e7f0e3d1-c968-42ea-8e4c-f8e965c6b748.png)
+![image](https://user-images.githubusercontent.com/87559347/190376984-ff6f4f02-af4f-472d-9422-294157221e9f.png)
+
+
 
 OpenLANE routing stage consists of two stages:
 
