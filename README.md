@@ -834,9 +834,8 @@ Today we will do generation of power distribution network. After running `gen_pd
 
 ### Maze Routing
 One simple routing algorithm is Maze Routing or Lee's routing:
-- The shortest path is one that follows a steady increment of one (1-to-12 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends. The route should not be diagonal and must not overlap an obstruction such as macros. 
+- The shortest path is one that follows a steady increment of one (1-to-9 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends. The route should not be diagonal and must not overlap an obstruction such as macros. 
 - This algorithm however has high run time and consume a lot of memory thus more optimized routing algorithm is preferred (but the principles stays the same where route with shortest path and less bends is preferred)  
-![image](https://user-images.githubusercontent.com/87559347/183368014-e7f0e3d1-c968-42ea-8e4c-f8e965c6b748.png)
 ![image](https://user-images.githubusercontent.com/87559347/190376984-ff6f4f02-af4f-472d-9422-294157221e9f.png)
 
 
@@ -845,11 +844,14 @@ OpenLANE routing stage consists of two stages:
 
  - Global Routing - Makes the general guide that will route all pins to its destination. The tool used is FastRoute
  - Detailed Routing - Uses the global routing's general guide to actually connect the pins with least amount of wire. The tool used is TritonRoute.
+### DRC Clean
+DRC cleaning is the next step after routing. DRC cleaning is done to ensure the routes can be fabricated and printed in silicon faithfully. Most DRC is due to the constraints of the photolitographic machine for chip fabrication where the wavelength of light used is limited. There are thousands of DRC and some DRC are:
+1. Minimum wire width
+2. Minimum wire pitch (center to center spacing)
+3. Minimum wire spacing (edge to edge spacing)
+4. Signal short = this can be solved my moving the route to next layer using vias. This results in more DRC (Via width, Via Spacing, etc.). Higher metal layer must be wider than lower metal layer and this is another DRC.  
 
-DRC checking is due to the constrains of the photolitographic machine for chip fabrication:. Some DRC are:
-1. The minimum wirewidth
-2. Minimum wire pitch
-3. Minimum wire spacing
+![image](https://user-images.githubusercontent.com/87559347/190388545-6ae13766-ad6b-441a-986a-57bf70ffaf7b.png)
 
 
 Now, we will finally do the routing, simply run `run_routing`. After approximately 15 minutes, the output is:
