@@ -1,6 +1,6 @@
 # OpenLANE-Sky130-Physical-Design-Workshop
 
-This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). The goal is to cover the complete RTL2GDS flow using the open-source flow named [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane).
+This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). The goal is to cover the complete RTL2GDS flow using the open-source flow named [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane).
 
 ![image](https://user-images.githubusercontent.com/87559347/183438001-f1bee6d2-6e8c-47a7-a3cb-b63082727adc.png)
 
@@ -66,7 +66,7 @@ Open Source Digital ASIC Design requires three open-source components:
 ### Notable Directories:
 
 ``` 
-├── openlane             -> directory where the tool can be invoked (run docker first)
+├── OOpenLane             -> directory where the tool can be invoked (run docker first)
 │   ├── designs          -> All designs must be extracted from this folder
 │   │   │   ├── picorv32a -> Design used as case study for this workshop
 │   |   |   ├── ...
@@ -80,9 +80,9 @@ Open Source Digital ASIC Design requires three open-source components:
 ```
 
 Inside a specfic design folder contains a `config.tcl` which overrides the default settings on OpenLANE. These configurations are specific to a design (e.g. clock period, clock port, verilog files...). The priority order for the OpenLANE settings:
-1. sky130_xxxxx_config.tcl in `Openlane/designs/[design]/`
-2. config.tcl in `Openlane/designs/[design]/`
-3. Default values in `Openlane/configuration/`
+1. sky130_xxxxx_config.tcl in `OpenLane/designs/[design]/`
+2. config.tcl in `OpenLane/designs/[design]/`
+3. Default values in `OpenLane/configuration/`
 
 
 
@@ -185,7 +185,7 @@ The  `README.md` describes all configuration variables for every stage and the t
  - `config.tcl` inside the design folder
  - System default settings inside `openlane/configurations`
 
-**2. Run floorplan on Openlane:** `% run floor_plan`
+**2. Run floorplan on OpenLane:** `% run floor_plan`
 
  
 **3. Check the results.** The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def` which is a [design exchange format](https://teamvlsi.com/2020/08/def-file-in-vlsi-design-exchange.html), containing the die area and positions. 
@@ -672,13 +672,13 @@ Setup timing analysis equation is:
 ### Pre-Layout STA with OpenSTA
 STA can either be **single corner** which only uses the `LIB_TYPICAL` library which is the one used in pre-layout(pos-synthesis) STA or **multicorner** which uses `LIB_SLOWEST`(setup analysis, high temp low voltage),`LIB_FASTEST`(hold analysis, low temp high voltage), and `LIB_TYPICAL` libraries. 
 
-Run STA engine using openroad, run openroad first then source `/openlane/scripts/openroad/sta.tcl` which contains the commands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the timing constraints of the design. 
+Run STA engine using OpenROAD (which in turn calls OpenSTA): run OpenROAD first then source `/openlane/scripts/openroad/sta.tcl` which contains the OpenROAD commands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the actual timing constraints of the design. 
 ![image](https://user-images.githubusercontent.com/87559347/189568030-f442a238-21e8-4fc1-b5d0-22de00b11af9.png)
 
-The result of running STA in openroad will be exactly the same as the log result of STA after running `run_synthesis`. Observe the delay:
+The result of running STA in OpenROAD will be exactly the same as the log result of STA after running `run_synthesis` inside OpenLane. Observe the delay:
 ![image](https://user-images.githubusercontent.com/87559347/189686801-46a9fb96-9be6-40c7-b62a-da3160489cb0.png)
 
-To reduce negative slack, focus on large delays. Notice how net `_02682_` has big fanout of 5. Use `report_net -connections _02682_` to display connections. First thing we can do is to go back to openlane and reduce fanouts by `set ::env(SYNTH_MAX_FANOUT) 4` then `run_synthesis` again. As shown below, wns is reduced from -1.35ns to -0.82ns.  
+To reduce negative slack, focus on large delays. Notice how net `_02682_` has big fanout of 5. Use `report_net -connections _02682_` to display connections. First thing we can do is to go back to OpenLane and reduce fanouts by `set ::env(SYNTH_MAX_FANOUT) 4` then `run_synthesis` again. As shown below, wns is reduced from -1.35ns to -0.82ns.  
 ![image](https://user-images.githubusercontent.com/87559347/189788023-9f6d85a9-a769-4b54-b156-2fa7b8980178.png)
 
 To further reduce the negative slack, we can also try upsizing the cell with high fanout so bigger driver will be used. High fanout results in high load cap which then results in high delay. But since we cannot change the load cap, we can just change the cell size to better drive that large cap load for less delay. As shown below, cell `_41882_` has a high cap load of 0.04nF and this causes a large delay due to `buf_1` not having enough drive strength to drive that high cap load. We can try upsizing the `buf_1` to `buf_4` (listed on the used liberty files are all cells which you can choose) inside OpenSTA: `replace_cell _41882_ sky130_fd_sc_hd__buf_4` 
@@ -758,7 +758,7 @@ There are three parameters that we need to consider when building a clock tree:
 ### Lab
 After extracting the modified verilog netlist after doing timing ECO, `run_floorplan` and `run_placement` and then `run_cts`. In CTS, the verilog netlist is modified to add the clock buffers and this new verilog netlist is saved under `/runs/[date]/results/cts/`.
 
- `run_cts` and the other Openlane commands are actually just calling the tcl proc (procedure) inside `/OpenLane/scripts/tcl_commands/`. This tcl procedure will then call Openroad to run the actual tool. For example, `run_cts` can be found inside `/OpenLane/scripts/tcl_commands/cts.tcl`, this tcl procedure will call Openroad and will call `/OpenLane/scripts/openroad/cts.tcl` which contains the Openroad commands to run TritonCTS.
+ `run_cts` and the other OpenLane commands are actually just calling the tcl proc (procedure) inside `/OpenLane/scripts/tcl_commands/`. This tcl procedure will then call OpenROAD to run the actual tool. For example, `run_cts` can be found inside `/OpenLane/scripts/tcl_commands/cts.tcl`, this tcl procedure will call OpenROAD and will call `/OpenLane/scripts/openroad/cts.tcl` which contains the OpenROAD commands to run TritonCTS.
 
 Inside the `/OpenLane/scripts/openroad/cts.tcl` contains the configuration variables for CTS. Notables ones are:
 - `CTS_CLK_BUFFER_LIST` = list of clock branch buffers (`sky130_fd_sc_hd__clkbuf_8` `sky130_fd_sc_hd__clkbuf_4` `sky130_fd_sc_hd__clkbuf_2`)
@@ -776,13 +776,20 @@ Setup and hold analysis with real clock will now include clock buffer delays:
 The goal is to have a positive slack on both setup and hold analysis.
 ![image](https://user-images.githubusercontent.com/87559347/190183335-fc20002a-b80b-4b86-ad0a-3db65a0b49c7.png)  
 
-STA result for hold analysis (min path):
+STA report for hold analysis (min path):
 ![image](https://user-images.githubusercontent.com/87559347/190203192-566f344e-b275-45de-af80-4058e1b34d31.png)
 
-STA result for setup analysis (max path):
+STA report for setup analysis (max path):
 ![image](https://user-images.githubusercontent.com/87559347/190202789-c79cd727-ebe3-4bc5-8fdc-a0f4dce77dba.png)
 
+### LAB (Multi-corner STA for Post-CTS)
+We will now do STA for post clock tree synthesis to include effect of clock buffers. Similar to pre-layout STA, this will done on OpenROAD (which will then call OpenSTA):  
+![image](https://user-images.githubusercontent.com/87559347/190295139-9ba76ec8-e116-467a-8960-77e941bf92ad.png)
 
+- `write_db` and `read_db`is done before running STA tool, this creates a database file using LEF file and resulting DEF file of the last stage.
+- Multi-corner STA must read both min library (for hold analysis) and max library (for setup analysis) unlike in single corner STA where only the typical library is read. 
+- SDC file used is the same for single and multi-corner. 
+- Since this is post-CTS STA, `set_propagated_clock` is used. `set_propagated_clock` propagates clock latency throughout a clock network, resulting in more accurate skew and timing results throughout the clock network. This is done  postlayout, after final clock tree generation, unlike in prelayout where ideal clock is used thus no clock latency.
 
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
