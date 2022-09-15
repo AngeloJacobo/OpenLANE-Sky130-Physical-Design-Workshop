@@ -791,6 +791,29 @@ We will now do STA for post clock tree synthesis to include effect of clock buff
 - SDC file used is the same for single and multi-corner. 
 - Since this is post-CTS STA, `set_propagated_clock` is used. `set_propagated_clock` propagates clock latency throughout a clock network, resulting in more accurate skew and timing results throughout the clock network. This is done  postlayout, after final clock tree generation, unlike in prelayout where ideal clock is used thus no clock latency.
 
+Also instead of manually running these commands, we can just simply do `source /openlane/scripts/openroad/sta_multi_corner.tcl` inside OpenROAD which runs the readily-made tcl script of OpenROAD commmands for running multi-corner STA. The result might be slightly different from the result above since the settings for `sta_multi_corner.tcl` is much more comprehensive.
+
+
+
+![image](https://user-images.githubusercontent.com/87559347/190305051-d703b77c-f634-4b2f-98ce-bb516d975faf.png)
+
+We are now failing in both hold and setup analysis. Setup analysis can be solved by reducing clock frequency but hold analysis is independent of clock period so it is harder to solve. But this hold negative slack can be reduced when we run routing. In hold violation, the data path is too fast so the increase in combinational delay due to the actual resistance and capacitance of the routed wires can reduce the negative slack for hold analysis.
+
+However, this large negative slack is due to TritonCTS only doing clock tree synthesis for typical corner and does not included max and min corners. Thus doing multi-corner STA is wrong on this case. What we can do is to go back to single corner STA simply by skipping reading min and max libraries and only the typical library.
+
+When TritonCTS is building the branch clock tree, it tries each buffers listed in `$::env(CTS_CLK_BUFFER_LIST)` (`sky130_fd_sc_hd__clkbuf_8` `sky130_fd_sc_hd__clkbuf_4` `sky130_fd_sc_hd__clkbuf_2`) from smallest to largest until the target skew is met. Target skew is stored in `$::env(CTS_TARGET_SKEW)` as 200ps. The STA result shows that `sky130_fd_sc_hd__clkbuf_8` is the mostly used buffer, we will now change the `$::env(CTS_CLK_BUFFER_LIST)` to use smaller buffers and observe the effect on STA and area:
+
+1. Use tcl `lreplace` command to modify `$::env(CTS_CLK_BUFFER_LIST)` so that only `sky130_fd_sc_hd__clkbuf_2` will remain:
+![image](https://user-images.githubusercontent.com/87559347/190331513-b0de28f8-6134-4805-8544-bf99f824226f.png)
+
+2. If you do `run_cts` now, the result will be wrong (the removed clock buffers will still appear) since we already run CTS before. The reason being is that the `$::env(CURRENT_DEF)` used by CTS is the DEF file result of the previously run CTS too. What DEF file we want for CTS is the placement's DEF file. So just change the `$::env(CURRENT_DEF)` to point to placement DEF file then `run_cts`:
+
+![image](https://user-images.githubusercontent.com/87559347/190335410-0f95a7bd-b6f9-4c4e-a90f-1698a05d1596.png)
+
+3. Observe the resulting post-CTS STA compared to before we modify the clock buffer. Only `buf_2` clock buffer is used now compared to `buf_8` used in previous run. The WNS is worse now since we used smaller clock buffers thus larger clock path delay, however the area is now smaller since we used smaller clock buffer.
+
+![image](https://user-images.githubusercontent.com/87559347/190339718-0e759d3e-b81e-4cb1-94f1-b075404b4460.png)
+
 
 # DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
