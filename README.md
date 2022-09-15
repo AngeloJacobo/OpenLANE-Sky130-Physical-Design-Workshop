@@ -838,12 +838,6 @@ One simple routing algorithm is Maze Routing or Lee's routing:
 - This algorithm however has high run time and consume a lot of memory thus more optimized routing algorithm is preferred (but the principles stays the same where route with shortest path and less bends is preferred)  
 ![image](https://user-images.githubusercontent.com/87559347/190376984-ff6f4f02-af4f-472d-9422-294157221e9f.png)
 
-
-
-OpenLANE routing stage consists of two stages:
-
- - Global Routing - Makes the general guide that will route all pins to its destination. The tool used is FastRoute
- - Detailed Routing - Uses the global routing's general guide to actually connect the pins with least amount of wire. The tool used is TritonRoute.
  
 ### DRC Clean
 DRC cleaning is the next step after routing. DRC cleaning is done to ensure the routes can be fabricated and printed in silicon faithfully. Most DRC is due to the constraints of the photolitographic machine for chip fabrication where the wavelength of light used is limited. There are thousands of DRC and some DRC are:
@@ -855,12 +849,18 @@ DRC cleaning is the next step after routing. DRC cleaning is done to ensure the 
 ![image](https://user-images.githubusercontent.com/87559347/190388545-6ae13766-ad6b-441a-986a-57bf70ffaf7b.png)
 
 ### Power Distribution Network (review)
-The power and ground rails has a pitch of 2.72um thus the reason why the [customized inverter cell](https://github.com/nickson-jose/vsdstdcelldesign) has a height of 2.72 or else the power and ground rails will not be able to power up the cell. Looking at the LEF file `runs/[date]/tmp/merged.nom.lef`, you will notice that all cells are of height 2.72um and only width differs.   
+This is just a review on PDN. The power and ground rails has a pitch of 2.72um thus the reason why the [customized inverter cell](https://github.com/nickson-jose/vsdstdcelldesign) has a height of 2.72 or else the power and ground rails will not be able to power up the cell. Looking at the LEF file `runs/[date]/tmp/merged.nom.lef`, you will notice that all cells are of height 2.72um and only width differs.   
 
 As shown below, power and ground flows from power/ground pads -> power/ground ring-> power/ground straps -> power/ground rails.
 
 ![image](https://user-images.githubusercontent.com/87559347/190429025-49ab6e33-8a67-4cea-8086-86eb73122282.png)
 
+### Routing Stage in OpenLane
+OpenLane routing stage consists of two stages:
+ - Global Routing - Form routing guides that can route all the nets. The tool used is FastRoute
+ - Detailed Routing - Uses the global routing's guide to actually connect the pins with least amount of wire and bends. The tool used is TritonRoute.
+ 
+ 
 Now, we will finally do the routing, simply run `run_routing`. After approximately 15 minutes, the output is:
 ![image](https://user-images.githubusercontent.com/87559347/183294065-92c9541d-e300-4e83-ae4e-bdd3ce252af4.png)
 
@@ -895,7 +895,7 @@ Tech file `.tech` contains the metal layer, connectivity between layers, DRC rul
 
 LEF file is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
 
-DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool (e.g. CTS must first read DEF file from placement stage).  
+DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool (e.g. CTS must first read DEF file from placement stage). So before running a stage, make sure the `$::env(CURRENT_DEF)` points to DEF file of previous stage or else there will be bunch of errors.  
 
 
 As seen in delay table, delay depends on input slew and ouput load capatiance. To reduce delay, focus on large slew and cap. As seen below, higher fanouts means larger load caps thus larger slew
