@@ -844,6 +844,7 @@ OpenLANE routing stage consists of two stages:
 
  - Global Routing - Makes the general guide that will route all pins to its destination. The tool used is FastRoute
  - Detailed Routing - Uses the global routing's general guide to actually connect the pins with least amount of wire. The tool used is TritonRoute.
+ 
 ### DRC Clean
 DRC cleaning is the next step after routing. DRC cleaning is done to ensure the routes can be fabricated and printed in silicon faithfully. Most DRC is due to the constraints of the photolitographic machine for chip fabrication where the wavelength of light used is limited. There are thousands of DRC and some DRC are:
 1. Minimum wire width
@@ -853,6 +854,12 @@ DRC cleaning is the next step after routing. DRC cleaning is done to ensure the 
 
 ![image](https://user-images.githubusercontent.com/87559347/190388545-6ae13766-ad6b-441a-986a-57bf70ffaf7b.png)
 
+### Power Distribution Network (review)
+The power and ground rails has a pitch of 2.72um thus the reason why the [customized inverter cell](https://github.com/nickson-jose/vsdstdcelldesign) has a height of 2.72 or else the power and ground rails will not be able to power up the cell. Looking at the LEF file `runs/[date]/tmp/merged.nom.lef`, you will notice that all cells are of height 2.72um and only width differs.   
+
+As shown below, power and ground flows from power/ground pads -> power/ground ring-> power/ground straps -> power/ground rails.
+
+![image](https://user-images.githubusercontent.com/87559347/190429025-49ab6e33-8a67-4cea-8086-86eb73122282.png)
 
 Now, we will finally do the routing, simply run `run_routing`. After approximately 15 minutes, the output is:
 ![image](https://user-images.githubusercontent.com/87559347/183294065-92c9541d-e300-4e83-ae4e-bdd3ce252af4.png)
