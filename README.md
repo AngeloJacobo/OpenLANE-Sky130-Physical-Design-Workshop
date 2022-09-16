@@ -860,6 +860,15 @@ OpenLane routing stage consists of two stages:
  - Global Routing - Form routing guides that can route all the nets. The tool used is FastRoute
  - Detailed Routing - Uses the global routing's guide to actually connect the pins with least amount of wire and bends. The tool used is TritonRoute.
  
+ **Triton Route**
+ - Performs detailed routing and honors the pre-processed route guides (made by global route) and uses MILP based (Mixed  Integer Linear Programming algorithm) panel routing scheme(uses panel as the grid guide for routing) with intra-layer parallel routing (routing happens simultaneously in a single layer) and inter-layer sequential layer (routing starts from bottom metal layer to top metal layer sequentially and not simultaneously). 
+ - Honors preferred direction of a layer. Metal layer direction is alternating (metal layer direction is specified in the LEF file e.g. met1 Horizontal, met2 Vertical, etc.) to reduce overlapping wires between layer and reduce potential capacitance which can degrade the signal.  
+ 
+ ![image](https://user-images.githubusercontent.com/87559347/190557016-163a2d31-b650-4924-b937-69e775a21213.png)
+
+
+
+ capacitance degrade the signal when parallel with plate capacitor, alternating orientation of metal layer (show lef file), reduce common capacitive area between layerscapcitive capcitive 
  
 Now, we will finally do the routing, simply run `run_routing`. After approximately 15 minutes, the output is:
 ![image](https://user-images.githubusercontent.com/87559347/183294065-92c9541d-e300-4e83-ae4e-bdd3ce252af4.png)
