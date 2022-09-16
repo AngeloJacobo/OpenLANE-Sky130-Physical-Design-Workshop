@@ -865,12 +865,30 @@ OpenLane routing stage consists of two stages:
  - Honors preferred direction of a layer. Metal layer direction is alternating (metal layer direction is specified in the LEF file e.g. met1 Horizontal, met2 Vertical, etc.) to reduce overlapping wires between layer and reduce potential capacitance which can degrade the signal.  
  
  ![image](https://user-images.githubusercontent.com/87559347/190557016-163a2d31-b650-4924-b937-69e775a21213.png)
+Best reference for this the [Triton Route paper](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiHkP7pnZj6AhUFHqYKHcBlC3UQFnoECBEQAQ&url=https%3A%2F%2Fvlsicad.ucsd.edu%2FPublications%2FConferences%2F363%2Fc363.pdf&usg=AOvVaw0ywnaeyGqzqAjI6TaJnamd).
 
+### Routing and SPEF Extraction
+run_routing
+run_parasitics_sta
+run_magic
+![image](https://user-images.githubusercontent.com/87559347/190680884-de08f5da-14b4-4e38-8d55-1bb8174d26d4.png)
 
-
+Open the DEF file output of routing stage in Magic:
+```
+magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def
+```
+Similar to what we did [when we plugged in the custom inverter cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#lab-part-3-day-4-fix-negative-slack), look for `sky130_myinverter` at the DEF file then search that cell instance in magic:
+![image](https://user-images.githubusercontent.com/87559347/190683374-77a0edfd-7d58-4172-8f3d-3533eb1f85d3.png)
+ 
+ 
+ 
  capacitance degrade the signal when parallel with plate capacitor, alternating orientation of metal layer (show lef file), reduce common capacitive area between layerscapcitive capcitive 
  
-Now, we will finally do the routing, simply run `run_routing`. After approximately 15 minutes, the output is:
+Now, we will finally do the routing, simply run `run_routing`. This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero:
+
+
+
+After approximately 15 minutes, the output is:
 ![image](https://user-images.githubusercontent.com/87559347/183294065-92c9541d-e300-4e83-ae4e-bdd3ce252af4.png)
 
 Now if we go to`openlane/designs/picorv32a/runs/07-08_08-07/results/routing`, we will see the following files:  
