@@ -9,8 +9,8 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
 # Table of Contents
  - [DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
    - [Simplified RTL-to-GSDII Flow](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#simplified-rtl-to-gdsii-flow)
-   - [Directories inside OpenLANE Working Directory](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#notable-directories)
-   - [Steps for the Lab](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-the-lab)
+   - [OpenLane Directory Hierarchy](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#notable-directories)
+   - [Lab [Day 1]: Determine Flip-flop Ratio](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-day-1-determine-flip-flop-ratio) 
  - [DAY 2: Good floorplan vs bad floorplan and introduction to library cells
 ](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
    - [Steps for Placement](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-placement)
@@ -26,7 +26,7 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
  
 
 
-# DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK:
+# DAY 1: Inception of Open-source EDA, OpenLANE and Sky130 PDK
 
 The core of the chip will contain two types of blocks:
  - **Foundry IP Blocks** (e.g. ADC, DAC, PLL, and SRAM) = blocks which requires some amount of intelligent techniques to build which can only be designed by foundries.
@@ -54,7 +54,6 @@ Open Source Digital ASIC Design requires three open-source components:
  [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane) = An open-source ASIC developement flow reference. It consists of multiple open-source tools needed for the whole RTL to GDSII flow. This is tuned epecially for Sky130 PDK. It also works for OSU 130nm. It is recommended to read the OpenLANE documentation before going forward.
  ![image](https://user-images.githubusercontent.com/87559347/182759711-6b9352ec-7652-4589-af31-53a409eb2830.png)
 
-### Notable details are:  
 - The input for the whole flow are the rtl files, sdc file, and PDK files. The output is GDSII/LEF file.
 
 - Yosys is used to convert the HDL to gate level netlist using generic components. The [ABC script](http://people.eecs.berkeley.edu/~alanmi/abc/) is then used to map the generic components to the standard cell library of the PDK. These ABC scripts is used to make various synthesis strategies (using the Synthesis Exploration) which can optimize the design either with least area or best timing.  
@@ -63,7 +62,7 @@ Open Source Digital ASIC Design requires three open-source components:
 
 - Antenna Rules Violation = long wire segments will act as antennna and will accumulate charges, this might damage the connected transistor gates. Solution is to either use bridging or antenna diode insertion to leak away the charges  
 
-### Notable Directories:
+### OpenLane Directory Hierarchy:
 
 ``` 
 ├── OOpenLane             -> directory where the tool can be invoked (run docker first)
@@ -79,7 +78,7 @@ Open Source Digital ASIC Design requires three open-source components:
 │   │   │  ├── libs.tech -> files specific for the tool (klayout,netgen,magic...) 
 ```
 
-Inside a specfic design folder contains a `config.tcl` which overrides the default settings on OpenLANE. These configurations are specific to a design (e.g. clock period, clock port, verilog files...). The priority order for the OpenLANE settings:
+Inside a specific design folder contains a `config.tcl` which overrides the default settings on OpenLANE. These configurations are specific to a design (e.g. clock period, clock port, verilog files...). The priority order for the OpenLANE settings:
 1. sky130_xxxxx_config.tcl in `OpenLane/designs/[design]/`
 2. config.tcl in `OpenLane/designs/[design]/`
 3. Default values in `OpenLane/configuration/`
@@ -116,9 +115,9 @@ After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32
 
 
 
-# DAY 2: Good floorplan vs bad floorplan and introduction to library cells
+# DAY 2: Good Floorplan vs Bad floorplan and Introduction to Library Cells
 
-### Floor Plan General Steps:
+### Floorplan Stage:
 
 1. Find height and width of core and die.   
 Core is where the logic blocks are placed and this seats at the center of the die. The width and height depends on dimensions of each standard cells on the netlist. Utilization factor is (area occupied by netlist)/(total area of the core). In practical scenario, utilization factor is 0.5 to 0.6. This is space occupied by netlist only, the remaining space is for routing and more additional cells. Aspect ratio is (height)/(width) of core, so only aspect ratio of 1 will produce a square core shape.
@@ -131,7 +130,7 @@ The complex preplaced logicblock requires a high amount of current from the powe
 
 ![image](https://user-images.githubusercontent.com/87559347/183011079-5f08eb01-28cf-4617-bcbc-f8f26eacc83d.png)
 
-#### 4. Power Planning
+4. Power Planning
 Decoupling capactor for sourcing logic blocks with enough current is not feasible to be applied all over the chip but only on the critical elements (preplaced complex logicblocks). Large number of elements switching to logic 0 might cause ground bounce due to large amount of current that needs to be sink at the same time, and switcing to logic 1 might cause voltage droop due to not enough current from the powersource to source needed current of all elements. Ground bounce and voltage droop might cause the voltage to not be within the noise margin range. The solution is to have multiple powersource taps (power mesh) where elements can source current from the nearest VDD and sink current to the nearest VSS tap. This is the reason why most chips have multiple powersource pins.
 
 5. Pin Placement
@@ -145,7 +144,7 @@ Below are all 6  steps for floor planning:
 ![image](https://user-images.githubusercontent.com/87559347/183446309-a0714ec5-0619-4327-bdfe-890c19cc97e0.png)
 
 
-### Steps for Placement
+### Placement Stage:
 1. Bind the netlist to a physical cell with real dimensions. The physical cell will come from a library that can provide multiple options for shapes, dimensions, and delay for same cells. 
 2. Next is placement of those physical cells to the floorplan. The flip flops must be placed as near as possible to the input and output pins to reduce timing delay. 
 3. Optimize placement to maintain signal integrity. This is where we estimate wirelength and capacitance (C=EA/d) and based on that insert repeaters/buffers. The wirelength will form a resistanace which will cause unnecessary voltage drop and a capacitance which will cause a slew rate that might not be permissible for fast current switching of logic gates. The solution to reduce resistance and capacitance is to insert buffers for long routes that will act as intermediary and separate a single long wire to multilple ones. Sometime we also do abutment where logic cells are placed very close to each other (almost zero delay) if it has to run at high frequency (2GHz). Crisscrossing of routes is a normal condition for PnR since we can use separate metal layer (using vias) for crisscrossed path.
@@ -209,12 +208,7 @@ magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/li
 To center the view, press "s" to select whole die then press "v" to center the view. Point the cursor to a cell then press "s" to select it, zoom into it by pressing 'z". Type "what" in `tkcon` to display information of selected object. These objects might be IO pin, decap cell, or well taps as shown below.  
 
 ![image](https://user-images.githubusercontent.com/87559347/183100900-b3527702-5375-4a4e-ad87-194fce382128.png)
-
-
-#### Note on using Magic:
- - To select a particular cell instance (e.g. cell \_08555_ which can be searched in the def file): `% select cell _08555_`
- - To list all cells in the layout: `% cellname allcells`
- - To check if a cell exists: `% cellname exists sky130_fd_sc_hd__xor3_4`
+ Useful Magic commands are listed on the [Magic Commands section](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#magic-commands).
 
 **5 Run placement:** `% run_placement`. This commmand is a wrapper which does global placement (performed by RePlace tool), Optimization (by Resier tool), and detailed placement (by OpenDP tool). It displays hundreds of iterations displaying HPWL and OVFL. The algorithm is said to be converging if the overflow is decreasing. It also checks the legality. 
 
@@ -226,13 +220,12 @@ magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/li
 
 ![image](https://user-images.githubusercontent.com/87559347/183227636-cc5b24b3-5b05-469f-9af1-de89b3c7ed1e.png)  
 
-Power Distibution Network (PDN) is normally created on floorplan stage but on OpenLANE, PDN is done on post-CTS (before routing).  
 
 
 ### Library Characterization
 Of all RTL-to-GDSII stages, one common thing that the EDA tool always need is data from the library of gates which keeps all standards cells (and, or, buffer gates,...), macros, IPs, decaps, etc. Same cells might have different flavors inside the library (different sizes, delays, threshold voltage). Bigger cell sizes means bigger drive strength to drive longer and thicker wires. Bigger threshold voltage (due to bigger size) will take more time to switch(slower clock) than those with smaller threshold voltage.  
 
-A single cell needs to go through cell design flow. The inputs to make a single cell comes from the foundry Process Design Kits:
+A single cell needs to go through the cell design flow. The inputs to make a single cell comes from the foundry Process Design Kits:
  - DRC & LVS Rules = tech files and poly subtrate paramters (CUSTOME LAYOUT COURSE)
  - SPICE Models  = Threshold, linear regions, saturation region equations with added foundry parameters. Including NMOS and PMOS parameteres (Ciruit Deisgn and Spice simulation Course)
  - User defined Spec = Cell height (separation between power and ground rail), Cell width (depends on drive strength), supply voltage, metal layer requirement (which metal layer the cell needs to work)
@@ -258,7 +251,7 @@ Below are the timing variables for propagation delay. The red is input waveform 
 
 Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshold is usually 50% and slew rate threshold is usually 20%-80%.
 
-# DAY 3: Design library cell using Magic Layout and ngspice Characterization
+# DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization
 
 Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
@@ -268,7 +261,7 @@ Configurations on OpenLANE can be changed on the flight. For example, to change 
 2. SPICE deck values = value for W/L (0.375u/0.25u means width is 375nm and lengthis 250nm). PMOS should be wider in width(2x or 3x) than NMOS. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
 3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.    
 
-#### Notes:
+**Notes:**
  - Width is the length of source and drain. Length is the distance between source and drain
  - PMOS' hole carrier is slower than NMOS' electron carrier mobility, so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS  
  - A good refresher on MOSFETS and CMOS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
@@ -277,7 +270,7 @@ Configurations on OpenLANE can be changed on the flight. For example, to change 
 
 ![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
 
-#### Notes:
+**Notes:**
  - Syntax for the PMOS and NMOS descriptiom:
      - `[component name] [drain] [gate] [source] [substrate] [transistor type] W=[width] L=[length]`
  - All components are described based on nodes and its values
@@ -295,9 +288,9 @@ plot out vs in
 ### SPICE Analysis for Switching Threshold and Propagation Delay
 CMOS robustness depends on:  
 
-**1. Switching threshold** = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
+1. Switching threshold = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
 
-**2. Propagation delay** = rise or fall delay
+2. Propagation delay = rise or fall delay
 
 DC transfer analysis is used for finding switching threshold. SPICE DC analysis below uses DC input of 2.5V. Simulation operation is DC sweep from 0V to 2.5V by 0.05V steps:
 ```
@@ -400,29 +393,30 @@ The layer hierarchy for NMOS is: Psubstrate -> Psubstrate Diffusion (psd) -> Psu
 The output of the layout is the LEF file. [LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is used by the router tool in PnR design to get the location of standard cells pins to route them properly. So it is basically the abstract form of layout of a standard cell. `picorv32a/runs/[DATE]/tmp` contains the merged lef files (cell LEF and tech LEF). Notice how metal layer directon (horizontal or vertical) is alternating. Also, metal layer width and thickness is increasing. 
 
 ### Magic Commands  
-[Here is a great video guide](https://www.youtube.com/watch?v=RPppaGdjbj0) on layout using Magic. And [here is the Magic website](http://opencircuitdesign.com/magic/) with turorials.
+[Here is a great video guide](https://www.youtube.com/watch?v=RPppaGdjbj0) on layout using Magic. And [here is the Magic website](http://opencircuitdesign.com/magic/) with tutorials.
 - Left click = lower-left corner of box  
 - Right click = upper-right corner of box  
-- :box = display parameters of selected box  
-- :grid 0.5um 0.5um = turn on/off and set grid   
-- :snap user = snap based on current grid  
-- :help snap = display help for command  
-- :drc style drc(full)
 - "z" = zoom in, "Z" = zoom out, "ctrl + z" = zoom into the box 
-- :paint poly = paint "poly" to current box
-- :drc why = show drc violation inside selected area (white dots are DRC violations )
-- :erase poly = delete poly inside the box
-- middle click on empty area will turn the box into empty (similar to erasing it)
-- :select area = select all geometries inside the box
-- :copy n 30 = copy selected geometries to North by 30 grid steps
-- :move n 1 = move selected geometries to North by 1 step ("." to move more, "u" to undo)
-- "s" three times will select all geometries electrically connected to each other    
-
-`drc why` will show DRC violation and also the DRC name which can be referenced from [Sky130 PDK Periphery Rules](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root).
+- Middle click on empty area will turn the box into empty (similar to erasing it)
+- "s" three times will select all geometries electrically connected to each other  
+- `:box` = display parameters of selected box  
+- `:grid` 0.5um 0.5um = turn on/off and set grid   
+- `:snap user` = snap based on current grid  
+- `:help snap` = display help for command  
+- `:drc style drc(full)` = use all DRC when doing DRC checking
+- `:paint poly` = paint "poly" to current box
+- `:drc why` = show drc violation inside selected area (white dots are DRC violations )
+- `:erase poly` = delete poly inside the box
+- `:select area` = select all geometries inside the box
+- `:copy n 30` = copy selected geometries to North by 30 grid steps
+- `:move n 1` = move selected geometries to North by 1 step ("." to move more, "u" to undo)  
+- `: select cell _08555_` = select a particular cell instance (e.g. cell \_08555_ which can be searched in the DEF file)
+- `:cellname allcells` = list all cells in the layout
+- `:cellname exists sky130_fd_sc_hd__xor3_4` = check if a cell exists 
+- `:drc why` = show DRC violation and also the DRC name which can be referenced from [Sky130 PDK Periphery Rules](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root).
 
 ![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
 
-## (ON FORWARD ARE LABS ONLY STARTING FROM DAY 3 SK1 L4)  
 
 ### Lab Part 1 [Day 3]: Slew Rate and Propagation delay Characterization
 
@@ -684,7 +678,7 @@ The result of running STA in OpenROAD will be exactly the same as the log result
 
 This can be done iteratively until desired slack is reached, this is called timing ECO (Engineering Change Order). To extract the modified verilog netlist: `write_verilog designs/picorv32a/runs/RUN_2022.09.14_05.18.35/results/synthesis/picorv32.v`. Beware that upsizing the cell will naturally increase core size. 
 
-#### Summary of OpenSTA Commands  
+### Summary of OpenSTA Commands  
 ```
 report_net -connections _02682_
 replace_cell _41882_ sky130_fd_sc_hd__buf_4`
@@ -814,23 +808,7 @@ When TritonCTS is building the branch clock tree, it tries each buffers listed i
 ![image](https://user-images.githubusercontent.com/87559347/190339718-0e759d3e-b81e-4cb1-94f1-b075404b4460.png)
 
 
-# DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA
-
-Wth the help from the course tutors, the error yesterday is found to be due to the newer version of OpenLANE. For an error-free flow, use the below sequence of commands. :
-```
-init_floorplan
-place_io
-global_placement_or
-detailed_placement
-tap_decap_or
-detailed_placement
-gen_pdn
-run_routing
-```
-Today we will do generation of power distribution network. After running `gen_pdn`, we can verify that the def file for PDN is generated by echoing `CURRENT_DEF`:
-
-![image](https://user-images.githubusercontent.com/87559347/183293313-adc46bad-0e2e-4bcf-a2fb-2e2e5b6a43b7.png)
-
+# DAY 5: Final steps for RTL2GDS using TritonRoute and OpenSTA
 
 ### Maze Routing
 One simple routing algorithm is Maze Routing or Lee's routing:
@@ -855,7 +833,7 @@ As shown below, power and ground flows from power/ground pads -> power/ground ri
 
 ![image](https://user-images.githubusercontent.com/87559347/190429025-49ab6e33-8a67-4cea-8086-86eb73122282.png)
 
-### Routing Stage in OpenLane
+### Routing Stage and TritonRoute
 OpenLane routing stage consists of two stages:
  - Global Routing - Form routing guides that can route all the nets. The tool used is FastRoute
  - Detailed Routing - Uses the global routing's guide to actually connect the pins with least amount of wire and bends. The tool used is TritonRoute.
@@ -867,7 +845,7 @@ OpenLane routing stage consists of two stages:
  ![image](https://user-images.githubusercontent.com/87559347/190557016-163a2d31-b650-4924-b937-69e775a21213.png)
 Best reference for this the [Triton Route paper](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiHkP7pnZj6AhUFHqYKHcBlC3UQFnoECBEQAQ&url=https%3A%2F%2Fvlsicad.ucsd.edu%2FPublications%2FConferences%2F363%2Fc363.pdf&usg=AOvVaw0ywnaeyGqzqAjI6TaJnamd).
 
-### Routing
+### Lab Part 1 [Day 5]: Routing Stage
 
 We will now finally do the routing, simply run `run_routing`. This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero. The zeroth iteration has 27426 violations and only at the 8th iteration was all violations solved. The whole routing took 1 hour and 10 mins in my Linux machine with 2 cores. A fun fact: the die area is just 584um by 595um but the total wirelength used for routing spans to 0.5m!!!
 
@@ -880,7 +858,8 @@ magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech
 Similar to what we did [when we plugged in the custom inverter cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#lab-part-3-day-4-fix-negative-slack), look for `sky130_myinverter` at the DEF file then search that cell instance in magic:
 ![image](https://user-images.githubusercontent.com/87559347/190683374-77a0edfd-7d58-4172-8f3d-3533eb1f85d3.png)
  
- ### SPEF Extraction and GDSII Streaming
+ ### Lab Part 2 [Day 5]: SPEF Extraction and GDSII Streaming
+ 
  Now that we verified the routing, run post-routing STA with `run_parasitics_sta`.
  - First, this will do a [SPEF (Standard Parasitics Extraction Format) extraction](https://www.physicaldesign4u.com/2020/05/standard-parasitic-extraction-format.html) of the parasitics resistance and capacitance. 
  - Then multi-corner STA will be done with the extracted SPEF.  
