@@ -6,29 +6,44 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
 
 
 
-# Table of Contents
+# Table of Contents  
  - DAY 1: Inception of Open-source EDA, OpenLANE and Sky130 PDK
    - Simplified RTL-to-GSDII Flow
    - OpenLane Directory Hierarchy
    - Lab [Day 1]: Determine Flip-flop Ratio
+   
  - DAY 2: Good Floorplan vs Bad floorplan and Introduction to Library Cells
    - Floorplan Stage
    - Placement Stage
    - Lab [Day 2]: Determine Die Area
    - Library Characterization
      - Timing Characterization
+     
  - DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization
    - Designing a Library Cell
-     - Spice Deck Netlist Description
+     - SPICE Deck Netlist Description
      - SPICE Analysis for Switching Threshold and Propagation Delay
    - CMOS Fabrication Process (16-Mask CMOS Process)
    - Layout and Metal Layers
     - Magic Commands
    - Lab Part 1 [Day 3]: Slew Rate and Propagation delay Characterization
    - Lab Part 2 [Day 3]: Fix Tech File DRC via Magic
+   
  - DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
    - Lab Part 1 [Day 4]: Extracting the LEF File
    - Lab Part 2 [Day 4]: Plug-in the Customized Inverter Cell to OpenLane
+   - Delay Table
+   - Lab Part 3 [Day 4]: Fix Negative Slack
+     - Locate Custom Inverter Cell in Layout
+   - Timing Analysis (Pre-Layout STA using Ideal Clocks)
+   - Lab Part 4 [Day 4]: Pre-Layout STA with OpenSTA
+   - Summary of OpenSTA Commands
+   - SDC File Parameters
+   - Clock Tree Synthesis Stage
+   - CTS Command Script
+   - Timing Analysis with Real Clocks
+   - Lab Part 5 [Day 4]: Multi-corner STA for Post-CTS
+   - Lab Part 6 [Day 4]: Replacing the Clock Buffer
    - 
  - [DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
  
@@ -274,7 +289,7 @@ Configurations on OpenLANE can be changed on the flight. For example, to change 
  - PMOS' hole carrier is slower than NMOS' electron carrier mobility, so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS  
  - A good refresher on MOSFETS and CMOS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
 
-### Spice Deck Netlist Description  
+### SPICE Deck Netlist Description  
 
 ![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
 
@@ -620,7 +635,6 @@ Notice how skew is zero since delay for both clock path is x9'+y15.
 ### Lab Part 3 [Day 4]: Fix Negative Slack
 
 1. Let us change some variables to minimize the negative slack. We will now change the variables "on the flight". Use `echo $::env(SYNTH_STRATEGY)` to view the current value of the variables before changing it:
-
 ```
 % echo $::env(SYNTH_STRATEGY)
 AREA 0
@@ -632,24 +646,28 @@ AREA 0
 % set ::env(SYNTH_SIZING) 1
 % echo $::env(SYNTH_DRIVING_CELL)
 sky130_fd_sc_hd__inv_2
-```  
+```
 With `SYNTH_STRATEGY` of `Delay 0`, the tool will focus more on optimizing/minimizing the delay, index can be 0 to 3 where 3 is the most optimized for timing (sacrificing more area). `SYNTH_BUFFERING` of 1 ensures cell buffer will be used on high fanout cells to reduce delay due to high capacitance load. `SYNTH_SIZING` of 1 will enable cell sizing where cell will be upsize or downsized as needed to meet timing. `SYNTH_DRIVING_CELL` is the cell used to drive the input ports and is vital for cells with a lot of fan-outs since it needs higher drive strength (larger driving cell needed).
 
 2. Below is the log report for slack and area. The area becomes bigger (from 98492 to 103364) but no negative slack anymore (from -1.2ns to +0.35ns)!  
-
 ![image](https://user-images.githubusercontent.com/87559347/189464181-d8649d12-e4ef-4cb6-afab-8a305787dd72.png)
 
-3. Next, we do `run_floorplan` then BUT:  
-
-![image](https://user-images.githubusercontent.com/87559347/189466107-b3c13af9-d01b-4033-8d9c-f83518c69ab8.png)  
-
+3. Next, we do `run_floorplan` HOWEVER:  
+![image](https://user-images.githubusercontent.com/87559347/189466107-b3c13af9-d01b-4033-8d9c-f83518c69ab8.png)    
 The solution for this error is found on [this issue thread](https://github.com/The-OpenROAD-Project/OpenLane/issues/1307). `basic_macro_placement` command is failing since `EXTRA_LEFS` variable inside `config.tcl` is assumed as a macro which is not. The temporary solution is to comment call on `basic_macro_placement` inside the `OpenLane/scripts/tcl_commands/floorplan.tcl` (this is okay since we are not adding any macro to the design). 
 
-4. After that `run_placement`, another error will occur relating to `remove_buffers`, the solution is to comment the call to `remove_buffers_from_nets` in `OpenLane/scripts/tcl_commands/placement.tcl`. After successfully running placement, `runs/[date]/results/placement/picorv32.def` will be created. Search for instance of cell `sky130_myinverter` by grep `cat picorv32.def | grep sky130_myinverter`:  
+4. After that `run_placement`, another error will occur relating to `remove_buffers`, the solution is to comment the call to `remove_buffers_from_nets` in `OpenLane/scripts/tcl_commands/placement.tcl`. After successfully running placement, `runs/[date]/results/placement/picorv32.def` will be created.  
+
+### Lab Part 4 [Day 4]:Locating the Custom Inverter Cell in Layout  
+1. Search for instance of cell `sky130_myinverter` inside the DEF file after placement stage: `cat picorv32.def | grep sky130_myinverter`:  
 ![image](https://user-images.githubusercontent.com/87559347/189475352-f74731e2-6ef8-4620-a3a9-16c31d326c82.png)
 
 
-5. Open the def file via magic: `magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &`. Select a single sky130_myinverter cell from listed above by commanding on tkon `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell sky130_myinverter is sucessfully placed on the core. Use `expand` on tkon to show the footprint of the cell and notice how the power and ground of sky130_myinverter overlaps the power and ground pins of its adjacent cells.  
+2. Open the def file via magic: 
+```
+magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
+```
+Select a single `sky130_myinverter` cell instance from the list dumped by grep (e.g. \_07237\_). On tkcon, command `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell `sky130_myinverter` is sucessfully placed on the core. Use `expand` on tkon to show the footprint of the cell and notice how the power and ground of sky130_myinverter overlaps the power and ground pins of its adjacent cells.  
 
 ![image](https://user-images.githubusercontent.com/87559347/189507538-6d0c1b46-dc45-4768-b00c-01e8336ab518.png)
 
@@ -670,7 +688,7 @@ Setup timing analysis equation is:
 ![image](https://user-images.githubusercontent.com/87559347/189511212-8e1ea86f-b2d6-4a68-9948-7d9999087886.png)
 - SU = Setup uncertainty due to jitter which is temporary variation of clock period. This is due to non-idealities of PLL/clock source.
 
-### Lab Part 4 [Day 4]: Pre-Layout STA with OpenSTA
+### Lab Part 5 [Day 4]: Pre-Layout STA with OpenSTA
 STA can either be **single corner** which only uses the `LIB_TYPICAL` library which is the one used in pre-layout(pos-synthesis) STA or **multicorner** which uses `LIB_SLOWEST`(setup analysis, high temp low voltage),`LIB_FASTEST`(hold analysis, low temp high voltage), and `LIB_TYPICAL` libraries. 
 
 1. Run STA engine using OpenROAD (which in turn calls OpenSTA): run OpenROAD first then source `/openlane/scripts/openroad/sta.tcl` which contains the OpenROAD commands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the actual timing constraints of the design. 
@@ -782,7 +800,7 @@ STA report for hold analysis (min path):
 STA report for setup analysis (max path):
 ![image](https://user-images.githubusercontent.com/87559347/190202789-c79cd727-ebe3-4bc5-8fdc-a0f4dce77dba.png)
 
-### Lab Part 5 [Day 4]: Multi-corner STA for Post-CTS
+### Lab Part 6 [Day 4]: Multi-corner STA for Post-CTS
 We will now do STA for post clock tree synthesis to include effect of clock buffers. Similar to pre-layout STA, this will done on OpenROAD (which will then call OpenSTA):  
 ![image](https://user-images.githubusercontent.com/87559347/190295139-9ba76ec8-e116-467a-8960-77e941bf92ad.png)
 
@@ -801,7 +819,7 @@ We are now failing in both hold and setup analysis. Setup analysis can be solved
 
 However, this large negative slack is due to TritonCTS only doing clock tree synthesis for typical corner and does not included max and min corners. Thus doing multi-corner STA is wrong on this case. What we can do is to go back to single corner STA simply by skipping reading min and max libraries and only the typical library.
 
-### Lab Part 6 [Day 4]: Replacing the Clock Buffer
+### Lab Part 7 [Day 4]: Replacing the Clock Buffer
 When TritonCTS is building the branch clock tree, it tries each buffers listed in `$::env(CTS_CLK_BUFFER_LIST)` (`sky130_fd_sc_hd__clkbuf_8` `sky130_fd_sc_hd__clkbuf_4` `sky130_fd_sc_hd__clkbuf_2`) from smallest to largest until the target skew is met. Target skew is stored in `$::env(CTS_TARGET_SKEW)` as 200ps. The STA result shows that `sky130_fd_sc_hd__clkbuf_8` is the mostly used buffer, we will now change the `$::env(CTS_CLK_BUFFER_LIST)` to use smaller buffers and observe the effect on STA and area:
 
 1. Use tcl `lreplace` command to modify `$::env(CTS_CLK_BUFFER_LIST)` so that only `sky130_fd_sc_hd__clkbuf_2` will remain:
