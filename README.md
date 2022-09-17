@@ -7,15 +7,15 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
 
 
 # Table of Contents  
- - DAY 1: Inception of Open-source EDA, OpenLANE and Sky130 PDK
-   - Simplified RTL-to-GSDII Flow
+ - DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK
+   - Simplified RTL to GSDII Flow
    - OpenLane Directory Hierarchy
-   - Lab [Day 1]: Determine Flip-flop Ratio
+   - Lab: Determine Flip-flop Ratio
    
  - DAY 2: Good Floorplan vs Bad floorplan and Introduction to Library Cells
    - Floorplan Stage
    - Placement Stage
-   - Lab [Day 2]: Determine Die Area
+   - Lab: Determine Die Area
    - Library Characterization
      - Timing Characterization
      
@@ -26,30 +26,36 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
    - CMOS Fabrication Process (16-Mask CMOS Process)
    - Layout and Metal Layers
     - Magic Commands
-   - Lab Part 1 [Day 3]: Slew Rate and Propagation delay Characterization
-   - Lab Part 2 [Day 3]: Fix Tech File DRC via Magic
+   - Lab Part 1: Slew Rate and Propagation Delay Characterization
+   - Lab Part 2: Fix Tech File DRC via Magic
    
  - DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
-   - Lab Part 1 [Day 4]: Extracting the LEF File
-   - Lab Part 2 [Day 4]: Plug-in the Customized Inverter Cell to OpenLane
+   - Lab Part 1: Extracting the LEF File
+   - Lab Part 2: Plug-in the Customized Inverter Cell to OpenLane
    - Delay Table
-   - Lab Part 3 [Day 4]: Fix Negative Slack
-     - Locate Custom Inverter Cell in Layout
+   - Lab Part 3: Fix Negative Slack
+   - Lab Part 4: Locating the Custom Inverter Cell in Layout
    - Timing Analysis (Pre-Layout STA using Ideal Clocks)
-   - Lab Part 4 [Day 4]: Pre-Layout STA with OpenSTA
-   - Summary of OpenSTA Commands
-   - SDC File Parameters
+     - Lab Part 5: Pre-Layout STA with OpenSTA
+       - Summary of OpenSTA Commands
+       - SDC File Parameters
    - Clock Tree Synthesis Stage
-   - CTS Command Script
+     - CTS Command Script
    - Timing Analysis with Real Clocks
-   - Lab Part 5 [Day 4]: Multi-corner STA for Post-CTS
-   - Lab Part 6 [Day 4]: Replacing the Clock Buffer
-   - 
- - [DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
- 
+     - Lab Part 6: Multi-corner STA for Post-CTS
+     - Lab Part 7: Replacing the Clock Buffer
+   
+ - Final Steps for RTL2GDS using TritonRoute and OpenSTA
+   - Maze Routing
+   - DRC Clean
+   - Power Distribution Network (review)
+   - Routing Stage and TritonRoute
+   - Lab Part 1: Routing Stage
+   - Lab Part 2: SPEF Extraction and GDSII Streaming
+  - Appendix 
 
 
-# DAY 1: Inception of Open-source EDA, OpenLANE and Sky130 PDK
+# DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK
 
 The core of the chip will contain two types of blocks:
  - **Foundry IP Blocks** (e.g. ADC, DAC, PLL, and SRAM) = blocks which requires some amount of intelligent techniques to build which can only be designed by foundries.
@@ -441,7 +447,7 @@ The output of the layout is the LEF file. [LEF (Library Exchange Format)](https:
 ![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
 
 
-### Lab Part 1 [Day 3]: Slew Rate and Propagation delay Characterization
+### Lab Part 1 [Day 3]: Slew Rate and Propagation Delay Characterization
 
 The task is to characterize a sample inverter cell by its slew rate and propagation delay.  
 
@@ -634,7 +640,7 @@ Notice how skew is zero since delay for both clock path is x9'+y15.
 
 ### Lab Part 3 [Day 4]: Fix Negative Slack
 
-1. Let us change some variables to minimize the negative slack. We will now change the variables "on the flight". Use `echo $::env(SYNTH_STRATEGY)` to view the current value of the variables before changing it:
+1. Let us change some variables to minimize the negative slack. We will now change the variables "on the flight". Use `echo $::env(SYNTH_STRATEGY)` to view the current value of the variables before changing it:  
 ```
 % echo $::env(SYNTH_STRATEGY)
 AREA 0
@@ -646,7 +652,7 @@ AREA 0
 % set ::env(SYNTH_SIZING) 1
 % echo $::env(SYNTH_DRIVING_CELL)
 sky130_fd_sc_hd__inv_2
-```
+```  
 With `SYNTH_STRATEGY` of `Delay 0`, the tool will focus more on optimizing/minimizing the delay, index can be 0 to 3 where 3 is the most optimized for timing (sacrificing more area). `SYNTH_BUFFERING` of 1 ensures cell buffer will be used on high fanout cells to reduce delay due to high capacitance load. `SYNTH_SIZING` of 1 will enable cell sizing where cell will be upsize or downsized as needed to meet timing. `SYNTH_DRIVING_CELL` is the cell used to drive the input ports and is vital for cells with a lot of fan-outs since it needs higher drive strength (larger driving cell needed).
 
 2. Below is the log report for slack and area. The area becomes bigger (from 98492 to 103364) but no negative slack anymore (from -1.2ns to +0.35ns)!  
@@ -834,7 +840,7 @@ When TritonCTS is building the branch clock tree, it tries each buffers listed i
 ![image](https://user-images.githubusercontent.com/87559347/190339718-0e759d3e-b81e-4cb1-94f1-b075404b4460.png)
 
 
-# DAY 5: Final steps for RTL2GDS using TritonRoute and OpenSTA
+# DAY 5: Final Steps for RTL2GDS using TritonRoute and OpenSTA
 
 ### Maze Routing
 One simple routing algorithm is Maze Routing or Lee's routing:
