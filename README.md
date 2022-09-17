@@ -12,7 +12,7 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
    - OpenLane Directory Hierarchy
    - Lab: Determine Flip-flop Ratio
    
- - DAY 2: Good Floorplan vs Bad floorplan and Introduction to Library Cells
+ - DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells
    - Floorplan Stage
    - Placement Stage
    - Lab: Determine Die Area
@@ -47,7 +47,7 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
    
  - Final Steps for RTL2GDS using TritonRoute and OpenSTA
    - Maze Routing
-   - DRC Clean
+   - DRC Cleaning
    - Power Distribution Network (review)
    - Routing Stage and TritonRoute
    - Lab Part 1: Routing Stage
@@ -114,7 +114,7 @@ Inside a specific design folder contains a `config.tcl` which overrides the defa
 
 
 
-### Lab [Day 1]: Determine Flip-flop Ratio
+### Lab [Day 1] - Determine Flip-flop Ratio:
 The task is to find the flip-flop ratio ratio for the design `picorv32a`. This is the ratio of the number of flip flops to the total number of cells:  
 
 **1. Run OpenLANE:**
@@ -144,7 +144,7 @@ After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32
 
 
 
-# DAY 2: Good Floorplan vs Bad floorplan and Introduction to Library Cells
+# DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells
 
 ### Floorplan Stage:
 
@@ -189,7 +189,7 @@ Placement is done on two stages:
  
 
 
-### Lab [Day 2]: Determine Die Area 
+### Lab [Day 2] - Determine Die Area: 
 
 **1. Set configuration variables.** Before running floorplan stage, the configuration variables or switches must be configured first. The configuration variables are on `openlane/configuration`:  
 
@@ -251,7 +251,7 @@ magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/li
 
 
 
-### Library Characterization
+### Library Characterization:
 Of all RTL-to-GDSII stages, one common thing that the EDA tool always need is data from the library of gates which keeps all standards cells (and, or, buffer gates,...), macros, IPs, decaps, etc. Same cells might have different flavors inside the library (different sizes, delays, threshold voltage). Bigger cell sizes means bigger drive strength to drive longer and thicker wires. Bigger threshold voltage (due to bigger size) will take more time to switch(slower clock) than those with smaller threshold voltage.  
 
 A single cell needs to go through the cell design flow. The inputs to make a single cell comes from the foundry Process Design Kits:
@@ -268,7 +268,7 @@ The library cell developer must adhere to the rules given on the inputs so that 
    - extract spice netlist .cir (parasitics of each element of cell: resistance, capacitance)
  Afte design is characterization using GUNA software, where the outputs are timing, noise, and power characterization.
  .
- ### Timing Characterization
+ ### Timing Characterization:
  
 Below are the timing variables for slew. This is two inverters in series, red is output of first inverter and blue is output of second inverter:  
 
@@ -285,7 +285,7 @@ Negative propagation delay is unexpected. That means the output comes before the
 Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
 
-### Designing a Library Cell
+### Designing a Library Cell:
 1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
 2. SPICE deck values = value for W/L (0.375u/0.25u means width is 375nm and lengthis 250nm). PMOS should be wider in width(2x or 3x) than NMOS. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
 3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.    
@@ -295,7 +295,7 @@ Configurations on OpenLANE can be changed on the flight. For example, to change 
  - PMOS' hole carrier is slower than NMOS' electron carrier mobility, so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS  
  - A good refresher on MOSFETS and CMOS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
 
-### SPICE Deck Netlist Description  
+### SPICE Deck Netlist Description:  
 
 ![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
 
@@ -314,7 +314,7 @@ dc1
 plot out vs in 
 ```  
 
-### SPICE Analysis for Switching Threshold and Propagation Delay
+### SPICE Analysis for Switching Threshold and Propagation Delay:
 CMOS robustness depends on:  
 
 1. Switching threshold = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
@@ -358,7 +358,7 @@ Below is the result of SPICE simulation for transient analysis:
 
 ![image](https://user-images.githubusercontent.com/87559347/187056370-18949899-a158-4307-96d9-d5c06bbeed66.png)
  
- ### CMOS Fabrication Process (16-Mask CMOS Process)
+ ### CMOS Fabrication Process (16-Mask CMOS Process):  
  **1. Selecting a substrate** = Layer where the IC is fabricated. Most commonly used is P-type substrate  
  **2. Creating active region for transistor** = Separate the transistor regions using SiO2 as isolation
   - Mask 1 = Covers the photoresist layer that must not be etched away (protects the two transistor active regions)
@@ -410,7 +410,7 @@ Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source an
  
 ![image](https://user-images.githubusercontent.com/87559347/187158161-4d230654-5102-4225-8e58-d6d8ed950990.png)
 
-### Layout and Metal Layers
+### Layout and Metal Layers:
 
 When polysilicon crosses N-diffusion/P-diffusion (diffusion is also called implantation), then an NMOS/PMOS is created. [Explained here](https://electronics.stackexchange.com/questions/223973/why-diffusions-in-cmos-cad-tool-magic-is-continuous) is the reason why the diffusion layer of source and drain "seems" to be connected under the polysilicon (diffusion layer for source and drain supposedly be separated).
 
@@ -421,7 +421,7 @@ The layer hierarchy for NMOS is: Psubstrate -> Psubstrate Diffusion (psd) -> Psu
 
 The output of the layout is the LEF file. [LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is used by the router tool in PnR design to get the location of standard cells pins to route them properly. So it is basically the abstract form of layout of a standard cell. `picorv32a/runs/[DATE]/tmp` contains the merged lef files (cell LEF and tech LEF). Notice how metal layer directon (horizontal or vertical) is alternating. Also, metal layer width and thickness is increasing. 
 
-### Magic Commands  
+### Magic Commands:  
 [Here is a great video guide](https://www.youtube.com/watch?v=RPppaGdjbj0) on layout using Magic. And [here is the Magic website](http://opencircuitdesign.com/magic/) with tutorials.
 - Left click = lower-left corner of box  
 - Right click = upper-right corner of box  
@@ -447,7 +447,7 @@ The output of the layout is the LEF file. [LEF (Library Exchange Format)](https:
 ![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
 
 
-### Lab Part 1 [Day 3]: Slew Rate and Propagation Delay Characterization
+### Lab Part 1 [Day 3] - Slew Rate and Propagation Delay Characterization:
 
 The task is to characterize a sample inverter cell by its slew rate and propagation delay.  
 
@@ -523,7 +523,7 @@ Using this transient response, we will now characterize the cell's slew rate and
 ![image](https://user-images.githubusercontent.com/87559347/188261518-792d3e99-6a5a-423d-9309-62287c608ec0.png)
 
 
-### Lab Part 2 [Day 3]: Fix Tech File DRC via Magic
+### Lab Part 2 [Day 3] - Fix Tech File DRC via Magic:
  
 Read through [this site about tech file](http://opencircuitdesign.com/magic/techref/maint2.html). All technology-specific information comes from a technology file. This file includes such information as layer types used, electrical connectivity between types, design rules, rules for mask generation, and rules for extracting netlists for circuit simulation. 
 Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root)
@@ -553,7 +553,7 @@ To run previous flow, add tag to prep design:
 ```
 prep -design picorv32a -tag [date]
 ```
-### Lab Part 1 [Day 4]: Extracting the LEF File   
+### Lab Part 1 [Day 4] - Extracting the LEF File:   
 PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries, power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) actually contains. So the next step is to extract the LEF file from Magic. But first, we need to follow guidelines of the PnR tool for the standard cells:
  - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
  - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch   
@@ -574,7 +574,7 @@ The grids show where the routing for the local-interconnet layer can only happen
 
 ![image](https://user-images.githubusercontent.com/87559347/188555080-03e4d472-9dcd-4c46-b0f0-7a37c952e5c3.png)
 
-### Lab Part 2 [Day 4]: Plug-in the Customized Inverter Cell to OpenLane
+### Lab Part 2 [Day 4] - Plug-in the Customized Inverter Cell to OpenLane:
 
 Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) for SKY130 PDK which contains the timing and power parameters for each cell needed in STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). The library name `sky130_fd_sc_hd__ss_025C_1v80` describes the PVT corner as slow-slow (delay is maximum), 25° Celsius temperature, at 1.8V power supply. Timing and power parameter of a cell is obtained by simulating the cell in a variety of operating conditions (different corners) and these data are represented in the liberty file. 
 
@@ -621,7 +621,7 @@ HOWEVER, looking  at the STA log `runs/[date]/logs/synthesis/sta.log`, we are no
 
 
 
-### Delay Table  
+### Delay Table:  
 
 In order to avoid large skew between endpoints of a clock tree (signal arrives at different point in time):
  - Buffers on the same level must have same capacitive load to ensure same timing delay or latency on the same level. 
@@ -638,7 +638,7 @@ Delay tables are used to capture the timing model of each cell and is included i
 
 Notice how skew is zero since delay for both clock path is x9'+y15.
 
-### Lab Part 3 [Day 4]: Fix Negative Slack
+### Lab Part 3 [Day 4] - Fix Negative Slack:
 
 1. Let us change some variables to minimize the negative slack. We will now change the variables "on the flight". Use `echo $::env(SYNTH_STRATEGY)` to view the current value of the variables before changing it:  
 ```
@@ -664,7 +664,7 @@ The solution for this error is found on [this issue thread](https://github.com/T
 
 4. After that `run_placement`, another error will occur relating to `remove_buffers`, the solution is to comment the call to `remove_buffers_from_nets` in `OpenLane/scripts/tcl_commands/placement.tcl`. After successfully running placement, `runs/[date]/results/placement/picorv32.def` will be created.  
 
-### Lab Part 4 [Day 4]:Locating the Custom Inverter Cell in Layout  
+### Lab Part 4 [Day 4] - Locating the Custom Inverter Cell in Layout:  
 1. Search for instance of cell `sky130_myinverter` inside the DEF file after placement stage: `cat picorv32.def | grep sky130_myinverter`:  
 ![image](https://user-images.githubusercontent.com/87559347/189475352-f74731e2-6ef8-4620-a3a9-16c31d326c82.png)
 
@@ -679,7 +679,7 @@ Select a single `sky130_myinverter` cell instance from the list dumped by grep (
 
 
 
-### Timing Analysis (Pre-Layout STA using Ideal Clocks)
+### Timing Analysis (Pre-Layout STA using Ideal Clocks):
 Pre-layout STA will not yet include effects of clock buffers and net-delay due to RC parasitics (wire delay will be derived from PDK library wire model).    
 ![image](https://user-images.githubusercontent.com/87559347/189510818-050c6b22-a319-4969-a23e-c82c57ebd4ff.png)  
 
@@ -694,7 +694,7 @@ Setup timing analysis equation is:
 ![image](https://user-images.githubusercontent.com/87559347/189511212-8e1ea86f-b2d6-4a68-9948-7d9999087886.png)
 - SU = Setup uncertainty due to jitter which is temporary variation of clock period. This is due to non-idealities of PLL/clock source.
 
-### Lab Part 5 [Day 4]: Pre-Layout STA with OpenSTA
+### Lab Part 5 [Day 4] - Pre-Layout STA with OpenSTA:
 STA can either be **single corner** which only uses the `LIB_TYPICAL` library which is the one used in pre-layout(pos-synthesis) STA or **multicorner** which uses `LIB_SLOWEST`(setup analysis, high temp low voltage),`LIB_FASTEST`(hold analysis, low temp high voltage), and `LIB_TYPICAL` libraries. 
 
 1. Run STA engine using OpenROAD (which in turn calls OpenSTA): run OpenROAD first then source `/openlane/scripts/openroad/sta.tcl` which contains the OpenROAD commands for single corner STA. This file also contains the path to the [SDC file](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html) which specifies the actual timing constraints of the design. 
@@ -710,7 +710,7 @@ The result of running STA in OpenROAD will be exactly the same as the log result
 
 This can be done iteratively until desired slack is reached, this is called timing ECO (Engineering Change Order). To extract the modified verilog netlist: `write_verilog designs/picorv32a/runs/RUN_2022.09.14_05.18.35/results/synthesis/picorv32.v`. Beware that upsizing the cell will naturally increase core size. 
 
-### Summary of OpenSTA Commands  
+### Summary of OpenSTA Commands:  
 ```
 report_net -connections _02682_
 replace_cell _41882_ sky130_fd_sc_hd__buf_4`
@@ -722,7 +722,7 @@ report_worst_slack -max
 write_verilog designs/picorv32a/runs/RUN_2022.09.14_05.18.35/results/synthesis/picorv32.v
 ```
 
-### SDC File Parameters
+### SDC File Parameters:
 
 - [create_clock](http://ebook.pldworld.com/_Semiconductors/Actel/Libero_v70_fusion_webhelp/create_clock_sdc_constraint.htm)
 ```
@@ -772,7 +772,7 @@ set_clock_transition 0.15 [get_clocks clk]
 ```
 [Here](https://hdvacademy.blogspot.com/2014/07/design-constraints.html) and [here](https://www.micro-ip.com/tw/drchip.php?mode=2&cid=8) is a great reference for some common SDC constraints. As a side note, [as said here](https://electronics.stackexchange.com/questions/339401/get-ports-vs-get-pins-vs-get-nets-vs-get-registers) I/Os of the top-level block are called port while I/Os of the subblocks are called pin.
 
-### Clock Tree Synthesis Stage
+### Clock Tree Synthesis Stage:
 There are three parameters that we need to consider when building a clock tree:
 - Clock Skew = In order to have minimum skew between clock endpoints, clock tree is used. This results in equal wirelength (thus equal latency/delay) for every path of the clock. 
 - Clock Slew = Due to wire resistance and capacitance of the clock nets, there will be slew in signal at the clock endpoint where signal is not the same with the original input clock signal anymore. This can be solved by clock buffers. Clock buffer differs in regular cell buffers since clock buffers has equal rise and fall time. 
@@ -780,7 +780,7 @@ There are three parameters that we need to consider when building a clock tree:
 
 ![image](https://user-images.githubusercontent.com/87559347/190031283-3bc25c79-f622-4b58-a448-95982d32612d.png)
 
-### CTS Command Script
+### CTS Command Script:
 After extracting the modified verilog netlist after doing timing ECO, `run_floorplan` and `run_placement` and then `run_cts`. In CTS, the verilog netlist is modified to add the clock buffers and this new verilog netlist is saved under `/runs/[date]/results/cts/`.
 
  `run_cts` and the other OpenLane commands are actually just calling the tcl proc (procedure) inside `/OpenLane/scripts/tcl_commands/`. This tcl procedure will then call OpenROAD to run the actual tool. For example, `run_cts` can be found inside `/OpenLane/scripts/tcl_commands/cts.tcl`, this tcl procedure will call OpenROAD and will call `/OpenLane/scripts/openroad/cts.tcl` which contains the OpenROAD commands to run TritonCTS.
@@ -791,7 +791,7 @@ Inside the `/OpenLane/scripts/openroad/cts.tcl` contains the configuration varia
 - `CTS_MAX_CAP` = maximum capacitance of the output port of the root clock buffer.
 
 
-### Timing Analysis with Real Clocks
+### Timing Analysis with Real Clocks:
 Setup and hold analysis with real clock will now include clock buffer delays:
 - In setup analysis, the point is that the data must arrive first before the clock rising edge to properly latch that data. Setup violation happens when path is slow. This is affected by parameters such as combinational delay, clock buffer delay, time period, setup time, and setup uncertainty (jitter).
 
@@ -806,7 +806,7 @@ STA report for hold analysis (min path):
 STA report for setup analysis (max path):
 ![image](https://user-images.githubusercontent.com/87559347/190202789-c79cd727-ebe3-4bc5-8fdc-a0f4dce77dba.png)
 
-### Lab Part 6 [Day 4]: Multi-corner STA for Post-CTS
+### Lab Part 6 [Day 4] - Multi-corner STA for Post-CTS:
 We will now do STA for post clock tree synthesis to include effect of clock buffers. Similar to pre-layout STA, this will done on OpenROAD (which will then call OpenSTA):  
 ![image](https://user-images.githubusercontent.com/87559347/190295139-9ba76ec8-e116-467a-8960-77e941bf92ad.png)
 
@@ -825,7 +825,7 @@ We are now failing in both hold and setup analysis. Setup analysis can be solved
 
 However, this large negative slack is due to TritonCTS only doing clock tree synthesis for typical corner and does not included max and min corners. Thus doing multi-corner STA is wrong on this case. What we can do is to go back to single corner STA simply by skipping reading min and max libraries and only the typical library.
 
-### Lab Part 7 [Day 4]: Replacing the Clock Buffer
+### Lab Part 7 [Day 4] - Replacing the Clock Buffer:
 When TritonCTS is building the branch clock tree, it tries each buffers listed in `$::env(CTS_CLK_BUFFER_LIST)` (`sky130_fd_sc_hd__clkbuf_8` `sky130_fd_sc_hd__clkbuf_4` `sky130_fd_sc_hd__clkbuf_2`) from smallest to largest until the target skew is met. Target skew is stored in `$::env(CTS_TARGET_SKEW)` as 200ps. The STA result shows that `sky130_fd_sc_hd__clkbuf_8` is the mostly used buffer, we will now change the `$::env(CTS_CLK_BUFFER_LIST)` to use smaller buffers and observe the effect on STA and area:
 
 1. Use tcl `lreplace` command to modify `$::env(CTS_CLK_BUFFER_LIST)` so that only `sky130_fd_sc_hd__clkbuf_2` will remain:
@@ -842,14 +842,14 @@ When TritonCTS is building the branch clock tree, it tries each buffers listed i
 
 # DAY 5: Final Steps for RTL2GDS using TritonRoute and OpenSTA
 
-### Maze Routing
+### Maze Routing:
 One simple routing algorithm is Maze Routing or Lee's routing:
 - The shortest path is one that follows a steady increment of one (1-to-9 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends. The route should not be diagonal and must not overlap an obstruction such as macros. 
 - This algorithm however has high run time and consume a lot of memory thus more optimized routing algorithm is preferred (but the principles stays the same where route with shortest path and less bends is preferred)  
 ![image](https://user-images.githubusercontent.com/87559347/190376984-ff6f4f02-af4f-472d-9422-294157221e9f.png)
 
  
-### DRC Clean
+### DRC Cleaning:
 DRC cleaning is the next step after routing. DRC cleaning is done to ensure the routes can be fabricated and printed in silicon faithfully. Most DRC is due to the constraints of the photolitographic machine for chip fabrication where the wavelength of light used is limited. There are thousands of DRC and some DRC are:
 1. Minimum wire width
 2. Minimum wire pitch (center to center spacing)
@@ -858,14 +858,14 @@ DRC cleaning is the next step after routing. DRC cleaning is done to ensure the 
 
 ![image](https://user-images.githubusercontent.com/87559347/190388545-6ae13766-ad6b-441a-986a-57bf70ffaf7b.png)
 
-### Power Distribution Network (review)
+### Power Distribution Network (review):
 This is just a review on PDN. The power and ground rails has a pitch of 2.72um thus the reason why the [customized inverter cell](https://github.com/nickson-jose/vsdstdcelldesign) has a height of 2.72 or else the power and ground rails will not be able to power up the cell. Looking at the LEF file `runs/[date]/tmp/merged.nom.lef`, you will notice that all cells are of height 2.72um and only width differs.   
 
 As shown below, power and ground flows from power/ground pads -> power/ground ring-> power/ground straps -> power/ground rails.
 
 ![image](https://user-images.githubusercontent.com/87559347/190429025-49ab6e33-8a67-4cea-8086-86eb73122282.png)
 
-### Routing Stage and TritonRoute
+### Routing Stage and TritonRoute:
 OpenLane routing stage consists of two stages:
  - Global Routing - Form routing guides that can route all the nets. The tool used is FastRoute
  - Detailed Routing - Uses the global routing's guide to actually connect the pins with least amount of wire and bends. The tool used is TritonRoute.
@@ -877,7 +877,7 @@ OpenLane routing stage consists of two stages:
  ![image](https://user-images.githubusercontent.com/87559347/190557016-163a2d31-b650-4924-b937-69e775a21213.png)
 Best reference for this the [Triton Route paper](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiHkP7pnZj6AhUFHqYKHcBlC3UQFnoECBEQAQ&url=https%3A%2F%2Fvlsicad.ucsd.edu%2FPublications%2FConferences%2F363%2Fc363.pdf&usg=AOvVaw0ywnaeyGqzqAjI6TaJnamd).
 
-### Lab Part 1 [Day 5]: Routing Stage
+### Lab Part 1 [Day 5] - Routing Stage:
 
 We will now finally do the routing, simply run `run_routing`. This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero. The zeroth iteration has 27426 violations and only at the 8th iteration was all violations solved. The whole routing took 1 hour and 10 mins in my Linux machine with 2 cores. A fun fact: the die area is just 584um by 595um but the total wirelength used for routing spans to 0.5m!!!
 
@@ -890,7 +890,7 @@ magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech
 Similar to what we did [when we plugged in the custom inverter cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#lab-part-3-day-4-fix-negative-slack), look for `sky130_myinverter` at the DEF file then search that cell instance in magic:
 ![image](https://user-images.githubusercontent.com/87559347/190683374-77a0edfd-7d58-4172-8f3d-3533eb1f85d3.png)
  
- ### Lab Part 2 [Day 5]: SPEF Extraction and GDSII Streaming
+ ### Lab Part 2 [Day 5] - SPEF Extraction and GDSII Streaming:
  
  Now that we verified the routing, run post-routing STA with `run_parasitics_sta`.
  - First, this will do a [SPEF (Standard Parasitics Extraction Format) extraction](https://www.physicaldesign4u.com/2020/05/standard-parasitic-extraction-format.html) of the parasitics resistance and capacitance. 
