@@ -1,6 +1,6 @@
 # OpenLANE-Sky130-Physical-Design-Workshop
 
-This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). The goal is to cover the complete RTL2GDS flow using the open-source flow named [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane).
+This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical Design using OpenLANE/Sky130](https://www.vlsisystemdesign.com/advanced-physical-design-using-openlane-sky130/). The goal is to cover the complete RTL2GDS flow using the open-source flow [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) with [SKY130nm PDK](https://skywater-pdk.readthedocs.io/en/main/rules/assumptions.html).
 
 ![image](https://user-images.githubusercontent.com/87559347/183438001-f1bee6d2-6e8c-47a7-a3cb-b63082727adc.png)
 
