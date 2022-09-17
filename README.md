@@ -880,16 +880,20 @@ magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech
 Similar to what we did [when we plugged in the custom inverter cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#lab-part-3-day-4-fix-negative-slack), look for `sky130_myinverter` at the DEF file then search that cell instance in magic:
 ![image](https://user-images.githubusercontent.com/87559347/190683374-77a0edfd-7d58-4172-8f3d-3533eb1f85d3.png)
  
- ### SPEF Extraction
+ ### SPEF Extraction and GDSII Streaming
  Now that we verified the routing, run post-routing STA with `run_parasitics_sta`.
  - First, this will do a [SPEF (Standard Parasitics Extraction Format) extraction](https://www.physicaldesign4u.com/2020/05/standard-parasitic-extraction-format.html) of the parasitics resistance and capacitance. 
  - Then multi-corner STA will be done with the extracted SPEF.  
  - SPEF extraction and multi-corner STA will be done on all three corners (min, max, nom).   
  
- The delay due to the real-world parasitics will most likely worsen the slack for both hold and setup analysis. The extracted SPEF can be located under `runs/[date]/results/routing` and the STA log files under `runs/[date]/logs/signoff`
+ The delay due to the real-world parasitics will most likely worsen the slack for both hold and setup analysis. The extracted SPEF can be located under `runs/[date]/results/routing` and the STA log files under `runs/[date]/logs/signoff`. Timing ECO can be done to reduce the slack to the desired levels.
  
- ### GDSII Extraction
- 
+The last stage will be to extract the GDSII file ready for fabrication, simply run `run_magic`. This uses Magic to stream the GDSII file `runs/[date]/results/signoff/picorv32.gds`. This GDSII file can then be read by Magic:
+
+![image](https://user-images.githubusercontent.com/87559347/190836579-b8650d62-d926-448d-a469-eb634ed207e2.png)
+
+
+
  
  capacitance degrade the signal when parallel with plate capacitor, alternating orientation of metal layer (show lef file), reduce common capacitive area between layerscapcitive capcitive 
  
