@@ -892,6 +892,12 @@ The last stage will be to extract the GDSII file ready for fabrication, simply r
 
 ![image](https://user-images.githubusercontent.com/87559347/190836579-b8650d62-d926-448d-a469-eb634ed207e2.png)
 
+We can then use [GDS3D](https://github.com/trilomix/GDS3D) to visualize the layout in 3D form:  
+![2022-09-17 11-33-26(3)](https://user-images.githubusercontent.com/87559347/190839568-cb773070-e80e-4bf6-9273-da6fb22e7343.gif)
+
+
+
+
 
 **DONE! CONGRATULATIONS!**
 
