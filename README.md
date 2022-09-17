@@ -80,7 +80,7 @@ Open Source Digital ASIC Design requires three open-source components:
 
  The final layout is in [GDSII file format](https://www.wikiwand.com/en/GDSII).
  
- [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) = An open-source ASIC developement flow reference. It consists of multiple open-source tools needed for the whole RTL to GDSII flow. This is tuned epecially for Sky130 PDK. It also works for OSU 130nm. It is recommended to read the OpenLANE documentation before going forward.
+ [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) = An open-source ASIC development flow reference. It consists of multiple open-source tools needed for the whole RTL to GDSII flow. This is tuned epecially for Sky130 PDK. It also works for OSU 130nm. It is recommended to read the [OpenLANE documentation](https://openlane.readthedocs.io/en/latest/)  before moving forward.
  ![image](https://user-images.githubusercontent.com/87559347/182759711-6b9352ec-7652-4589-af31-53a409eb2830.png)
 
 - The input for the whole flow are the rtl files, sdc file, and PDK files. The output is GDSII/LEF file.
@@ -115,7 +115,7 @@ Inside a specific design folder contains a `config.tcl` which overrides the defa
 
 
 ### Lab [Day 1] - Determine Flip-flop Ratio:
-The task is to find the flip-flop ratio ratio for the design `picorv32a`. This is the ratio of the number of flip flops to the total number of cells:  
+The task is to find the flip-flop ratio ratio for the design `picorv32a`. This is the ratio of the number of flip flops to the total number of cells. For the OpenLane installation, the steps are very straight forward and can be found on the [OpenLane repo](https://github.com/The-OpenROAD-Project/OpenLane).
 
 **1. Run OpenLANE:**
  - `$ make mount` = Open the docker platform inside the `openlane/`
@@ -915,9 +915,9 @@ We can then use [GDS3D](https://github.com/trilomix/GDS3D) to visualize the layo
  ## Appendix:
 - [Tech file](http://opencircuitdesign.com/magic/techref/maint2.html) `.tech` contains the metal layer, connectivity between layers, DRC rules, and other definitions needed by Magic layout tool to view a single cell.
 
-- [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) `.lef` is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
+- [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) `.lef` is combination of tech lef (contains metal layer geometries) and cell lef (contains geometries for all cells in the standard cell library). This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
 
-- [DEF file](https://teamvlsi.com/2020/08/def-file-in-vlsi-design-exchange.html) `.def` is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool (e.g. CTS must first read DEF file from placement stage). So before running a stage, make sure the `$::env(CURRENT_DEF)` points to DEF file of previous stage or else there will be bunch of errors.  
+- [DEF file](https://teamvlsi.com/2020/08/def-file-in-vlsi-design-exchange.html) `.def` is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivity of cells of the design and is just a footprint (does not contain the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool (e.g. CTS EDA tool TritonCTS must first read DEF file from placement stage). So before running a stage, make sure the `$::env(CURRENT_DEF)` points to DEF file of previous stage or else there will be bunch of errors.  
 
 
 
