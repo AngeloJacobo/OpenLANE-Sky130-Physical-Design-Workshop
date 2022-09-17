@@ -7,21 +7,29 @@ This is the compilation of my notes for the 5 Day Workshop: [Advanced Physical D
 
 
 # Table of Contents
- - [DAY 1: Inception of open-source EDA, OpenLANE and Sky130 PDK](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
-   - [Simplified RTL-to-GSDII Flow](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#simplified-rtl-to-gdsii-flow)
-   - [OpenLane Directory Hierarchy](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#notable-directories)
-   - [Lab [Day 1]: Determine Flip-flop Ratio](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-day-1-determine-flip-flop-ratio) 
- - [DAY 2: Good floorplan vs bad floorplan and introduction to library cells
-](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
-   - [Steps for Placement](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-placement)
-   - [Steps for the Lab](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-the-lab-1)
-   - [Library Characterization](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#library-characterization)
- - [DAY 3: Design library cell using Magic Layout and ngspice characterization
-](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
-   - [Steps for the Lab](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-the-lab-2)
- - [DAY 4: Pre-layout timing analysis and importance of good clock tree](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-4-pre-layout-timing-analysis-and-importance-of-good-clock-tree)
-   - [Steps for Plugging in the Customized Cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#steps-for-plugging-in-the-customized-cell-to-openlane)
-   - [About Delay Table](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#about-delay-table)
+ - DAY 1: Inception of Open-source EDA, OpenLANE and Sky130 PDK
+   - Simplified RTL-to-GSDII Flow
+   - OpenLane Directory Hierarchy
+   - Lab [Day 1]: Determine Flip-flop Ratio
+ - DAY 2: Good Floorplan vs Bad floorplan and Introduction to Library Cells
+   - Floorplan Stage
+   - Placement Stage
+   - Lab [Day 2]: Determine Die Area
+   - Library Characterization
+     - Timing Characterization
+ - DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization
+   - Designing a Library Cell
+     - Spice Deck Netlist Description
+     - SPICE Analysis for Switching Threshold and Propagation Delay
+   - CMOS Fabrication Process (16-Mask CMOS Process)
+   - Layout and Metal Layers
+    - Magic Commands
+   - Lab Part 1 [Day 3]: Slew Rate and Propagation delay Characterization
+   - Lab Part 2 [Day 3]: Fix Tech File DRC via Magic
+ - DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
+   - Lab Part 1 [Day 4]: Extracting the LEF File
+   - Lab Part 2 [Day 4]: Plug-in the Customized Inverter Cell to OpenLane
+   - 
  - [DAY 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
  
 
@@ -51,7 +59,7 @@ Open Source Digital ASIC Design requires three open-source components:
 
  The final layout is in [GDSII file format](https://www.wikiwand.com/en/GDSII).
  
- [OpenLANE](https://github.com/The-OpenROAD-Project/OpenLane) = An open-source ASIC developement flow reference. It consists of multiple open-source tools needed for the whole RTL to GDSII flow. This is tuned epecially for Sky130 PDK. It also works for OSU 130nm. It is recommended to read the OpenLANE documentation before going forward.
+ [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) = An open-source ASIC developement flow reference. It consists of multiple open-source tools needed for the whole RTL to GDSII flow. This is tuned epecially for Sky130 PDK. It also works for OSU 130nm. It is recommended to read the OpenLANE documentation before going forward.
  ![image](https://user-images.githubusercontent.com/87559347/182759711-6b9352ec-7652-4589-af31-53a409eb2830.png)
 
 - The input for the whole flow are the rtl files, sdc file, and PDK files. The output is GDSII/LEF file.
@@ -239,7 +247,7 @@ The library cell developer must adhere to the rules given on the inputs so that 
    - extract spice netlist .cir (parasitics of each element of cell: resistance, capacitance)
  Afte design is characterization using GUNA software, where the outputs are timing, noise, and power characterization.
  .
- ### Timing Characterization (timing .lib)
+ ### Timing Characterization
  
 Below are the timing variables for slew. This is two inverters in series, red is output of first inverter and blue is output of second inverter:  
 
@@ -256,7 +264,7 @@ Negative propagation delay is unexpected. That means the output comes before the
 Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
 
-### Steps to design a CMOS inverter cell
+### Designing a Library Cell
 1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
 2. SPICE deck values = value for W/L (0.375u/0.25u means width is 375nm and lengthis 250nm). PMOS should be wider in width(2x or 3x) than NMOS. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
 3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.    
@@ -266,7 +274,7 @@ Configurations on OpenLANE can be changed on the flight. For example, to change 
  - PMOS' hole carrier is slower than NMOS' electron carrier mobility, so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS  
  - A good refresher on MOSFETS and CMOS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
 
-### Spice deck netlist description  
+### Spice Deck Netlist Description  
 
 ![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
 
@@ -518,13 +526,13 @@ Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater
 ![image](https://user-images.githubusercontent.com/87559347/188421488-3d84c048-06b3-46ac-9816-513dd7c721f2.png)
 
 
-# DAY 4: Pre-layout timing analysis and importance of good clock tree
+# DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
 
 To run previous flow, add tag to prep design:
 ```
 prep -design picorv32a -tag [date]
 ```
-### Lab Part 1 [Day 4]: Extract the LEF File   
+### Lab Part 1 [Day 4]: Extracting the LEF File   
 PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries, power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) actually contains. So the next step is to extract the LEF file from Magic. But first, we need to follow guidelines of the PnR tool for the standard cells:
  - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
  - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch   
@@ -545,7 +553,7 @@ The grids show where the routing for the local-interconnet layer can only happen
 
 ![image](https://user-images.githubusercontent.com/87559347/188555080-03e4d472-9dcd-4c46-b0f0-7a37c952e5c3.png)
 
-### Lab Part 2 [Day 4]: Plug-in the Customized Inverter Cell to OpenLANE
+### Lab Part 2 [Day 4]: Plug-in the Customized Inverter Cell to OpenLane
 
 Inside `pdks/sky130A/libs.ref/sky130_fd_sc_hd/lib/` are the [liberty timing files](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html) for SKY130 PDK which contains the timing and power parameters for each cell needed in STA. It can either be slow, typical, fast with different different supply voltages (1v80, 1v65, 1v95, etc.). These are the so called [PVT corners](https://chipedge.com/what-are-pvt-corners-in-vlsi/). The library name `sky130_fd_sc_hd__ss_025C_1v80` describes the PVT corner as slow-slow (delay is maximum), 25° Celsius temperature, at 1.8V power supply. Timing and power parameter of a cell is obtained by simulating the cell in a variety of operating conditions (different corners) and these data are represented in the liberty file. 
 
