@@ -893,51 +893,27 @@ The last stage will be to extract the GDSII file ready for fabrication, simply r
 ![image](https://user-images.githubusercontent.com/87559347/190836579-b8650d62-d926-448d-a469-eb634ed207e2.png)
 
 
+**DONE! CONGRATULATIONS!**
 
- 
- capacitance degrade the signal when parallel with plate capacitor, alternating orientation of metal layer (show lef file), reduce common capacitive area between layerscapcitive capcitive 
- 
+ ## Appendix:
+- [Tech file](http://opencircuitdesign.com/magic/techref/maint2.html) `.tech` contains the metal layer, connectivity between layers, DRC rules, and other definitions needed by Magic layout tool to view a single cell.
+
+- [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) `.lef` is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
+
+- [DEF file](https://teamvlsi.com/2020/08/def-file-in-vlsi-design-exchange.html) `.def` is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool (e.g. CTS must first read DEF file from placement stage). So before running a stage, make sure the `$::env(CURRENT_DEF)` points to DEF file of previous stage or else there will be bunch of errors.  
 
 
 
 
-After approximately 15 minutes, the output is:
-![image](https://user-images.githubusercontent.com/87559347/183294065-92c9541d-e300-4e83-ae4e-bdd3ce252af4.png)
-
-Now if we go to`openlane/designs/picorv32a/runs/07-08_08-07/results/routing`, we will see the following files:  
-
-![image](https://user-images.githubusercontent.com/87559347/183294232-ec494cb7-d05d-4476-90e2-d88968574d3f.png)
-
-Notice how the def file is named simply as `picrov32a`. This is because this is the final def file in the whole RTL2GDSII flow. Let us open that def read at magic using:
-```
-magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.def
-```
-![image](https://user-images.githubusercontent.com/87559347/183294391-13c987c5-33fa-4761-ba82-396c12749aab.png)
-
-Zooming in:  
-
-![image](https://user-images.githubusercontent.com/87559347/183294992-8d197684-99e7-42d7-b10f-9105cb5b1761.png)
- 
-
-### DONE! CONGRATULATIONS!
-
-# Acknowledgements
- - [Nickson Jose - Workshop Instructor](https://www.udemy.com/user/nickson-jose/)
+## Acknowledgements
  - [Kunal Ghosh - Co-founder of VSD](https://www.udemy.com/user/anagha/)
+ - [Nickson Jose - Workshop Instructor](https://www.udemy.com/user/nickson-jose/)
  
  
-# Inquiries  
+## Inquiries  
 Connect with me at my linkedin: https://www.linkedin.com/in/angelo-jacobo/
 
 
 
-Tech file `.tech` contains the metal layer, connectivity between layers, DRC rules, and other definitions needed by Magic layout tool to view a single cell.
 
-LEF file is divided to tech lef which contains metal layer geometries and cell lef which contains geometries for all cells in the standard cell library. This lef file does not contain the logic part of cells, only the footprint that is needed by the PnR tool. 
-
-DEF file is derived from LEF file and is used to transfer the design data from one EDA tool to another EDA tool and contains connectivty of cells of the design and is just a footprint (does not contains the logic part of cells) that the PnR needs. Each EDA tool to run will need to read first the LEF file `runs/[date]/tmp/merged.nom.lef` and the DEF file output of the previous stage's EDA tool (e.g. CTS must first read DEF file from placement stage). So before running a stage, make sure the `$::env(CURRENT_DEF)` points to DEF file of previous stage or else there will be bunch of errors.  
-
-
-As seen in delay table, delay depends on input slew and ouput load capatiance. To reduce delay, focus on large slew and cap. As seen below, higher fanouts means larger load caps thus larger slew
-Load cap will not change but we can change cell size to better drive that large cap load for less delay
 
