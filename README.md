@@ -867,24 +867,33 @@ OpenLane routing stage consists of two stages:
  ![image](https://user-images.githubusercontent.com/87559347/190557016-163a2d31-b650-4924-b937-69e775a21213.png)
 Best reference for this the [Triton Route paper](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiHkP7pnZj6AhUFHqYKHcBlC3UQFnoECBEQAQ&url=https%3A%2F%2Fvlsicad.ucsd.edu%2FPublications%2FConferences%2F363%2Fc363.pdf&usg=AOvVaw0ywnaeyGqzqAjI6TaJnamd).
 
-### Routing and SPEF Extraction
-run_routing
-run_parasitics_sta
-run_magic
+### Routing
+
+We will now finally do the routing, simply run `run_routing`. This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero. The zeroth iteration has 27426 violations and only at the 8th iteration was all violations solved. The whole routing took 1 hour and 10 mins in my Linux machine with 2 cores. A fun fact: the die area is just 584um by 595um but the total wirelength used for routing spans to 0.5m!!!
+
 ![image](https://user-images.githubusercontent.com/87559347/190680884-de08f5da-14b4-4e38-8d55-1bb8174d26d4.png)
 
-Open the DEF file output of routing stage in Magic:
+A DEF file will be formed `runs/[date]/results/routing/picorv32.def` Open the DEF file output of routing stage in Magic:
 ```
 magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def
 ```
 Similar to what we did [when we plugged in the custom inverter cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#lab-part-3-day-4-fix-negative-slack), look for `sky130_myinverter` at the DEF file then search that cell instance in magic:
 ![image](https://user-images.githubusercontent.com/87559347/190683374-77a0edfd-7d58-4172-8f3d-3533eb1f85d3.png)
  
+ ### SPEF Extraction
+ Now that we verified the routing, run post-routing STA with `run_parasitics_sta`.
+ - First, this will do a [SPEF (Standard Parasitics Extraction Format) extraction](https://www.physicaldesign4u.com/2020/05/standard-parasitic-extraction-format.html) of the parasitics resistance and capacitance. 
+ - Then multi-corner STA will be done with the extracted SPEF.  
+ - SPEF extraction and multi-corner STA will be done on all three corners (min, max, nom).   
+ 
+ The delay due to the real-world parasitics will most likely worsen the slack for both hold and setup analysis. The extracted SPEF can be located under `runs/[date]/results/routing` and the STA log files under `runs/[date]/logs/signoff`
+ 
+ ### GDSII Extraction
  
  
  capacitance degrade the signal when parallel with plate capacitor, alternating orientation of metal layer (show lef file), reduce common capacitive area between layerscapcitive capcitive 
  
-Now, we will finally do the routing, simply run `run_routing`. This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero:
+
 
 
 
